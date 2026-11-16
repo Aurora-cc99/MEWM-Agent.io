@@ -1,0 +1,931 @@
+/* Modern CSS Variables for consistent theming (Adapted from SCP-Bench) */
+:root {
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --secondary-color: #64748b;
+  --accent-color: #0ea5e9;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-light: #94a3b8;
+  --background-primary: #ffffff;
+  --background-secondary: #f8fafc;
+  --background-accent: #f1f5f9;
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gradient-subtle: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  --border-radius: 12px;
+  --border-radius-lg: 16px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-size: 16px;
+  background-color: var(--background-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Modern Button Styles */
+.button {
+  border-radius: var(--border-radius) !important;
+  font-weight: 600 !important;
+  transition: var(--transition) !important;
+  border: 2px solid transparent !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.button.is-dark {
+  background: var(--text-primary) !important;
+  border: none !important;
+  color: white !important;
+  box-shadow: var(--shadow-md);
+}
+
+.button.is-dark:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  background: var(--primary-color) !important;
+}
+
+.button.is-dark:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-md);
+}
+
+.link-block a {
+  margin: 8px 6px;
+}
+
+.publication-links {
+  margin-top: -0.25rem;
+}
+
+.custom-link-btn {
+  font-size: 1.15rem !important;
+  padding: 0.55rem 1.25rem !important;
+}
+
+.custom-link-btn .icon {
+  font-size: 1.2rem !important;
+}
+
+/* Hero Section Modernization */
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero.is-light {
+  background: var(--background-secondary);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.hero-body {
+  padding: 3.5rem 1.5rem 2.5rem;
+}
+
+/* Publication Content Styling */
+.publication-title {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 800 !important;
+  color: var(--text-primary) !important;
+  margin-bottom: 1.6rem !important;
+  line-height: 1.18 !important;
+  font-size: 2.55rem !important;
+}
+
+.publication-authors {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 500;
+  margin-bottom: 1.15rem;
+  line-height: 1.7;
+}
+
+.publication-affiliations {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.96rem !important;
+  color: #475569;
+  line-height: 1.65;
+  margin-bottom: 1.25rem;
+}
+
+.publication-affiliations .affil-line {
+  margin-bottom: 0.2rem;
+}
+
+.publication-affiliations .corr-note {
+  margin-top: 0.45rem;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.publication-authors a {
+  color: var(--primary-color) !important;
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--transition);
+  position: relative;
+}
+
+.publication-authors a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background: var(--gradient-accent);
+  transition: var(--transition);
+}
+
+.publication-authors a:hover::after {
+  width: 100%;
+}
+
+.publication-authors a:hover {
+  color: var(--primary-hover) !important;
+}
+
+.author-block {
+  display: inline-block;
+  margin-right: 0.45rem;
+}
+
+/* Teaser 1x2 Horizontal Layout under Hero */
+.teaser-section {
+  padding-top: 1rem;
+  padding-bottom: 2.5rem;
+}
+
+.teaser-1x2-grid {
+  display: grid;
+  grid-template-columns: 2.56fr 1fr;
+  gap: 1.5rem;
+  align-items: center;
+  width: 100%;
+}
+
+.teaser-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 0.75rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.teaser-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.teaser-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+/* Section Spacing & Titles */
+.section {
+  padding: 2.8rem 1.5rem;
+}
+
+.title.is-3 {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+  color: var(--text-primary);
+  margin-bottom: 1.8rem !important;
+  position: relative;
+  padding-bottom: 0.9rem;
+}
+
+.title.is-3::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: var(--gradient-accent);
+  border-radius: 2px;
+}
+
+.subsection-heading {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 1.3rem !important;
+  font-weight: 700 !important;
+  color: #1e3a8a;
+  margin: 2rem 0 0.85rem !important;
+  text-align: center;
+}
+
+/* Content Improvements */
+.content.has-text-justified {
+  font-size: 1.06rem;
+  line-height: 1.8;
+  color: #334155;
+}
+
+.content.has-text-justified p {
+  margin-bottom: 1.25rem;
+}
+
+/* Zoomable Figure Cards */
+.paper-figure {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 0.85rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.paper-figure:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.paper-figure img,
+.zoomable-img {
+  cursor: zoom-in;
+}
+
+.figure-note {
+  margin-top: 0.55rem;
+  margin-bottom: 0;
+  text-align: justify;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: #475569;
+}
+
+/* SCP Table Styling */
+.scp-table-section {
+  background: #ffffff;
+}
+
+.scp-table-block {
+  margin-bottom: 2.6rem;
+}
+
+.scp-table-block:last-child {
+  margin-bottom: 0.5rem;
+}
+
+.scp-table-caption {
+  max-width: 1120px;
+  margin: 0 auto 0.85rem;
+  text-align: justify;
+  color: rgb(60, 94, 146);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.scp-table-footnote {
+  max-width: 1120px;
+  margin: 0.5rem auto 0;
+  text-align: left;
+  color: #64748b;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.scp-table-wrap {
+  overflow-x: auto;
+  border: 1px solid rgb(215, 222, 237);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+  background: #ffffff;
+}
+
+.scp-results-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+  font-size: 0.76rem;
+}
+
+.scp-results-table th,
+.scp-results-table td {
+  border: 1px solid rgb(224, 228, 238);
+  padding: 0.36rem 0.35rem;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 1.3;
+  vertical-align: middle;
+}
+
+.scp-results-table th:first-child,
+.scp-results-table td:first-child {
+  text-align: left;
+  font-weight: 600;
+  padding-left: 0.55rem;
+  padding-right: 0.55rem;
+}
+
+/* Text-rich Table I allows wrapping */
+.scp-results-table.role-compare-table th,
+.scp-results-table.role-compare-table td {
+  white-space: normal;
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  vertical-align: top;
+}
+
+.scp-results-table.role-compare-table th:first-child,
+.scp-results-table.role-compare-table td:first-child {
+  width: 15%;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+/* Compact styling for 25-column Tables III & IV */
+.scp-results-table.table-wide-25 {
+  font-size: 0.68rem;
+}
+
+.scp-results-table.table-wide-25 th,
+.scp-results-table.table-wide-25 td {
+  padding: 0.28rem 0.2rem;
+}
+
+.scp-results-table.table-wide-25 th:first-child,
+.scp-results-table.table-wide-25 td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #ffffff;
+  padding-left: 0.45rem;
+  padding-right: 0.45rem;
+  border-right: 2px solid rgb(205, 215, 235);
+}
+
+.scp-results-table.table-wide-25 thead tr:first-child th:first-child {
+  background: rgb(239, 245, 255);
+  z-index: 3;
+}
+
+.scp-results-table.table-wide-25 tbody tr:nth-child(even):not(.group-row):not(.ours-row):not(.teacher-row) td:first-child {
+  background: rgb(250, 252, 255);
+}
+
+.scp-results-table.table-wide-25 tbody tr.teacher-row td:first-child {
+  background: rgb(238, 244, 255);
+}
+
+.scp-results-table.table-wide-25 tbody tr.ours-row td:first-child {
+  background: rgb(225, 236, 255);
+}
+
+.scp-results-table thead th {
+  background: rgb(239, 245, 255);
+  color: rgb(57, 90, 138);
+  font-weight: 700;
+}
+
+.scp-results-table .avg-col {
+  background: rgb(228, 237, 251);
+  font-weight: 700;
+}
+
+.scp-results-table .deep-cell {
+  background: rgb(177, 199, 242) !important;
+  color: #0f1e38;
+  font-weight: 700;
+}
+
+.scp-results-table .group-row td {
+  background: rgb(239, 241, 245) !important;
+  text-align: center !important;
+  font-weight: 700;
+  color: rgb(70, 93, 127);
+  padding: 0.34rem 0.5rem;
+}
+
+.scp-results-table tbody tr:nth-child(even):not(.group-row) td {
+  background: rgb(250, 252, 255);
+}
+
+.scp-results-table td:not(:first-child) {
+  font-variant-numeric: tabular-nums;
+}
+
+.scp-results-table .teacher-row td {
+  background: rgb(238, 244, 255) !important;
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.scp-results-table .ours-row td {
+  background: rgb(225, 236, 255) !important;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.boxed-best {
+  display: inline-block;
+  border: 1.5px solid rgb(89, 189, 126);
+  border-radius: 4px;
+  padding: 0.02rem 0.18rem;
+  font-weight: 700;
+  line-height: 1.15;
+  background: #ffffff;
+}
+
+/* Dataset Tabs for ME-LVQA Tables V-VIII */
+.dataset-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0 auto 1rem;
+}
+
+.dataset-tab-btn {
+  appearance: none;
+  border: 1px solid rgb(203, 213, 225);
+  background: #f8fafc;
+  color: #334155;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.83rem;
+  font-weight: 600;
+  padding: 0.42rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dataset-tab-btn:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+  background: #eff6ff;
+}
+
+.dataset-tab-btn.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.lvqa-tab-panel {
+  display: none;
+}
+
+.lvqa-tab-panel.active {
+  display: block;
+}
+
+/* Key Takeaways Box (Exact SCP-Bench Style) */
+.key-takeaways {
+  margin: 1.6rem auto 0.8rem;
+  padding: 1.4rem 1.75rem;
+  max-width: 1020px;
+  border-radius: 12px;
+  background: linear-gradient(to right, #ffffff, #f8fafc);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-left: 5px solid #3b82f6;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.key-takeaways:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+}
+
+.takeaways-title {
+  margin: 0 0 0.75rem 0 !important;
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.takeaways-title::before {
+  content: '💡';
+  font-size: 1.2rem;
+}
+
+.key-takeaways ul {
+  margin: 0 !important;
+  padding-left: 2.2rem !important;
+  list-style-type: none !important;
+}
+
+.key-takeaways li {
+  position: relative;
+  margin: 0.45rem 0;
+  color: #334155;
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.key-takeaways li::before {
+  content: '→';
+  color: #3b82f6;
+  position: absolute;
+  left: -1.45rem;
+  font-weight: bold;
+}
+
+/* AU Semantic Highlight Colors from MEWM-Agent.tex */
+.au-verified {
+  color: rgb(0, 124, 60);
+  font-weight: 700;
+  background: rgba(0, 124, 60, 0.08);
+  padding: 0.05rem 0.32rem;
+  border-radius: 4px;
+}
+
+.au-weak {
+  color: rgb(185, 105, 0);
+  font-weight: 700;
+  background: rgba(201, 120, 0, 0.1);
+  padding: 0.05rem 0.32rem;
+  border-radius: 4px;
+}
+
+.au-fabricat {
+  color: rgb(197, 32, 32);
+  font-weight: 700;
+  background: rgba(197, 32, 32, 0.08);
+  padding: 0.05rem 0.32rem;
+  border-radius: 4px;
+}
+
+.au-emotion {
+  color: rgb(112, 48, 160);
+  font-weight: 700;
+  background: rgba(112, 48, 160, 0.09);
+  padding: 0.05rem 0.32rem;
+  border-radius: 4px;
+}
+
+/* Cite / BibTeX Box (Exact SCP-Bench Style) */
+.cite-box {
+  max-width: 980px;
+  margin: 0.6rem auto 0;
+  padding: 1rem;
+  border: 1px solid rgb(219, 222, 255);
+  border-radius: 10px;
+  background: #f8fbff;
+}
+
+.cite-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+
+.cite-title {
+  font-weight: 700;
+  color: rgb(57, 90, 138);
+}
+
+.cite-box pre {
+  margin: 0;
+  padding: 0.9rem 1rem !important;
+  background: #ffffff !important;
+  border: 1px solid rgb(224, 228, 238) !important;
+  border-radius: 8px !important;
+  font-size: 0.86rem !important;
+  line-height: 1.45;
+  overflow-x: auto;
+}
+
+.cite-box code {
+  background: transparent !important;
+  color: var(--text-primary) !important;
+  font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace !important;
+}
+
+.copy-bibtex-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0.55rem 0.95rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.copy-bibtex-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.copy-bibtex-btn.copied {
+  background: #10b981;
+}
+
+.copy-bibtex-btn.copied .copy-text::after {
+  content: "ied!";
+}
+
+/* Footer */
+.footer {
+  background: var(--background-secondary);
+  border-top: 1px solid var(--border-color);
+  padding: 2.5rem 1.5rem;
+}
+
+.footer .content {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  text-align: center;
+}
+
+.footer a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.footer a:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+/* Scroll to Top Button */
+.scroll-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 50px;
+  height: 50px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.scroll-to-top:hover {
+  background: var(--primary-hover);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-xl);
+}
+
+.scroll-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Floating Table of Contents */
+.toc-nav {
+  position: fixed;
+  top: 50%;
+  right: 1.25rem;
+  transform: translateY(-50%);
+  z-index: 900;
+  background: rgba(255, 255, 255, 0.93);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(59, 130, 246, 0.08);
+  padding: 0.75rem 0.6rem;
+  min-width: 175px;
+  max-width: 205px;
+  transition: box-shadow 0.3s ease, opacity 0.3s ease;
+}
+
+.toc-nav:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(59, 130, 246, 0.12);
+}
+
+.toc-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0 0.4rem 0.5rem;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  margin-bottom: 0.5rem;
+}
+
+.toc-icon {
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.toc-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.toc-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #64748b;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toc-link:hover {
+  background: rgba(59, 130, 246, 0.08);
+  color: #2563eb;
+  transform: translateX(-2px);
+}
+
+.toc-link.active {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(99, 102, 241, 0.08));
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.toc-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.toc-link:hover .toc-dot {
+  background: #93c5fd;
+  transform: scale(1.3);
+}
+
+.toc-link.active .toc-dot {
+  background: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  transform: scale(1.2);
+}
+
+/* Lightbox Modal for High-Res Figure Inspection */
+.img-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(15, 23, 42, 0.86);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+  cursor: zoom-out;
+}
+
+.img-lightbox.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.img-lightbox img {
+  max-width: 95vw;
+  max-height: 92vh;
+  object-fit: contain;
+  background: #ffffff;
+  padding: 0.5rem;
+  border-radius: 10px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.img-lightbox-close {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.5rem;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.img-lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.32);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero,
+.section {
+  animation: fadeInUp 0.55s ease-out;
+}
+
+/* Responsive Breakpoints */
+@media screen and (max-width: 1450px) {
+  .toc-nav {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 960px) {
+  .teaser-1x2-grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .publication-title {
+    font-size: 2rem !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .hero-body {
+    padding: 2.2rem 1rem 1.8rem;
+  }
+
+  .section {
+    padding: 2rem 1rem;
+  }
+
+  .publication-title {
+    font-size: 1.75rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .publication-authors {
+    font-size: 0.98rem !important;
+  }
+
+  .publication-affiliations {
+    font-size: 0.86rem !important;
+  }
+
+  .custom-link-btn {
+    font-size: 1rem !important;
+    padding: 0.5rem 1rem !important;
+  }
+}

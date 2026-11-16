@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="MEWM-Agent: A Multi-Agent Interactive Emotional World Model for Long-video Micro-expression Question Answering">
+  <meta name="description" content="MEWM-Agent is a multi-agent interactive emotional world model for long-video micro-expression question answering (ME-LVQA), achieving state-of-the-art performance across CAS(ME)², SAMM-LV, CAS(ME)³, and 4DME.">
+  <meta name="keywords" content="Long-video micro-expression question answering, ME-LVQA, emotional world model, multi-agent collaboration, evidence-guided policy optimization, WAEPO, affective computing">
+  <meta name="author" content="Haolin Chang, Fuze Tian, Lei Jiang, Lixin Zhang, Jingyu Liu, Kun Qian, Qinglin Zhao, Bin Hu, Björn W. Schuller">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Lanzhou University & Beijing Institute of Technology">
+  <meta property="og:title" content="MEWM-Agent: A Multi-Agent Interactive Emotional World Model for Long-video Micro-expression Question Answering">
+  <meta property="og:description" content="A multi-agent interactive emotional world model unifying AU-centered dual-timescale dynamics, counterfactual verification, four-layer memory, and WAEPO on-policy distillation for ME-LVQA.">
+  <meta property="og:url" content="https://aurora-cc99.github.io/MEWM-Agent.io/">
+  <meta property="og:image" content="static/images/F1.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MEWM-Agent: A Multi-Agent Interactive Emotional World Model for Long-video Micro-expression Question Answering">
+  <meta name="twitter:description" content="A multi-agent interactive emotional world model for long-video micro-expression question answering (ME-LVQA).">
+  <meta name="twitter:image" content="static/images/F1.png">
+
+  <!-- Academic/Research Specific -->
+  <meta name="citation_title" content="MEWM-Agent: A Multi-Agent Interactive Emotional World Model for Long-video Micro-expression Question Answering">
+  <meta name="citation_author" content="Chang, Haolin">
+  <meta name="citation_author" content="Tian, Fuze">
+  <meta name="citation_author" content="Jiang, Lei">
+  <meta name="citation_author" content="Zhang, Lixin">
+  <meta name="citation_author" content="Liu, Jingyu">
+  <meta name="citation_author" content="Qian, Kun">
+  <meta name="citation_author" content="Zhao, Qinglin">
+  <meta name="citation_author" content="Hu, Bin">
+  <meta name="citation_author" content="Schuller, Björn W.">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_journal_title" content="IEEE Transactions on Pattern Analysis and Machine Intelligence">
+
+  <meta name="theme-color" content="#2563eb">
+  <meta name="msapplication-TileColor" content="#2563eb">
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <title>MEWM-Agent | Long-video Micro-expression Question Answering</title>
+
+  <link rel="icon" href="data:,">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- JavaScript -->
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/bulma-carousel.min.js"></script>
+  <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+</head>
+
+<body>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <!-- Lightbox Modal for High-Resolution Inspection -->
+  <div class="img-lightbox" id="img-lightbox" role="dialog" aria-label="Zoomed figure preview">
+    <button class="img-lightbox-close" type="button" aria-label="Close preview">&times;</button>
+    <img id="img-lightbox-target" src="" alt="Zoomed figure">
+  </div>
+
+  <!-- Floating Table of Contents -->
+  <nav class="toc-nav" id="toc-nav" aria-label="Table of contents">
+    <div class="toc-header">
+      <span class="toc-icon">📋</span>
+      <span class="toc-title">Contents</span>
+    </div>
+    <ul class="toc-list">
+      <li><a href="#abstract" class="toc-link" data-target="abstract">
+          <span class="toc-dot"></span>Abstract
+        </a></li>
+      <li><a href="#paradigm-comparison" class="toc-link" data-target="paradigm-comparison">
+          <span class="toc-dot"></span>Paradigm &amp; Roles
+        </a></li>
+      <li><a href="#method" class="toc-link" data-target="method">
+          <span class="toc-dot"></span>Method &amp; Memory
+        </a></li>
+      <li><a href="#experimental-results" class="toc-link" data-target="experimental-results">
+          <span class="toc-dot"></span>Main Results
+        </a></li>
+      <li><a href="#ablation-and-optimization" class="toc-link" data-target="ablation-and-optimization">
+          <span class="toc-dot"></span>Ablation &amp; WAEPO
+        </a></li>
+      <li><a href="#case-study" class="toc-link" data-target="case-study">
+          <span class="toc-dot"></span>Case Study
+        </a></li>
+      <li><a href="#conclusion" class="toc-link" data-target="conclusion">
+          <span class="toc-dot"></span>Conclusion
+        </a></li>
+      <li><a href="#cite" class="toc-link" data-target="cite">
+          <span class="toc-dot"></span>Cite
+        </a></li>
+    </ul>
+  </nav>
+
+  <main id="main-content">
+    <!-- Hero Header: Title -> Authors -> Institutions/Units -> Code & Hugging Face -->
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container is-max-desktop">
+          <div class="columns is-centered">
+            <div class="column has-text-centered">
+              <h1 class="title is-1 publication-title">MEWM-Agent: A Multi-Agent Interactive Emotional World Model for Long-video Micro-expression Question Answering</h1>
+
+              <!-- 1. Authors -->
+              <div class="is-size-5 publication-authors">
+                <span class="author-block"><a href="https://orcid.org/0009-0004-9969-9006" target="_blank" rel="noopener noreferrer">Haolin Chang</a><sup>1</sup>,</span>
+                <span class="author-block"><a href="https://orcid.org/0000-0001-6734-0585" target="_blank" rel="noopener noreferrer">Fuze Tian</a><sup>1*</sup>,</span>
+                <span class="author-block"><a href="https://orcid.org/0009-0003-0997-8208" target="_blank" rel="noopener noreferrer">Lei Jiang</a><sup>2</sup>,</span>
+                <span class="author-block"><a href="https://orcid.org/0000-0002-4789-238X" target="_blank" rel="noopener noreferrer">Lixin Zhang</a><sup>1</sup>,</span>
+                <span class="author-block"><a href="https://orcid.org/0000-0002-1646-637X" target="_blank" rel="noopener noreferrer">Jingyu Liu</a><sup>3,4</sup>,</span>
+                <span class="author-block"><a href="https://orcid.org/0000-0002-1918-6453" target="_blank" rel="noopener noreferrer">Kun Qian</a><sup>3,4</sup>,</span>
+                <span class="author-block"><a href="https://orcid.org/0000-0001-5690-666X" target="_blank" rel="noopener noreferrer">Qinglin Zhao</a><sup>1*</sup>,</span>
+                <span class="author-block"><a href="https://orcid.org/0000-0003-3514-5413" target="_blank" rel="noopener noreferrer">Bin Hu</a><sup>3,4,5*</sup>,</span>
+                <span class="author-block"><a href="https://orcid.org/0000-0002-6478-8699" target="_blank" rel="noopener noreferrer">Bj&ouml;rn W. Schuller</a><sup>6</sup></span>
+              </div>
+
+              <!-- 2. Institutions and Units -->
+              <div class="publication-affiliations">
+                <div class="affil-line">
+                  <span class="author-block"><sup>1</sup>School of Information Science and Engineering, Lanzhou University, Lanzhou, China</span>
+                </div>
+                <div class="affil-line">
+                  <span class="author-block"><sup>2</sup>The First People's Hospital of Lanzhou, Lanzhou, China</span>
+                </div>
+                <div class="affil-line">
+                  <span class="author-block"><sup>3</sup>Key Laboratory of Brain Health Intelligent Evaluation and Intervention (Beijing Institute of Technology), Ministry of Education, Beijing, China</span>
+                </div>
+                <div class="affil-line">
+                  <span class="author-block"><sup>4</sup>School of Medical Technology, Beijing Institute of Technology, Beijing, China</span>
+                </div>
+                <div class="affil-line">
+                  <span class="author-block"><sup>5</sup>Gansu Provincial Key Laboratory of Wearable Computing, School of Information Science and Engineering, Lanzhou University, Lanzhou, China</span>
+                </div>
+                <div class="affil-line">
+                  <span class="author-block"><sup>6</sup>CHI, the Chair of Health Informatics, TUM University Hospital, Munich Data Science Institute (MDSI), and Munich Center for Machine Learning (MCML), Munich, Germany</span>
+                </div>
+                <div class="corr-note">*Corresponding authors: Fuze Tian, Qinglin Zhao, Bin Hu</div>
+              </div>
+
+              <!-- 3. Code & Hugging Face Links (Replacing arXiv & Dataset in SCP-Bench) -->
+              <div class="column has-text-centered">
+                <div class="publication-links">
+                  <span class="link-block">
+                    <a href="https://github.com/Aurora-cc99/MEWM-Agent" target="_blank" rel="noopener noreferrer"
+                      class="external-link button is-normal is-rounded is-dark custom-link-btn">
+                      <span class="icon">
+                        <i class="fab fa-github"></i>
+                      </span>
+                      <span>Code</span>
+                    </a>
+                  </span>
+
+                  <!-- TODO: Fill in your Hugging Face URL -->
+                  <span class="link-block">
+                    <a href="" onclick="return false;"
+                      class="external-link button is-normal is-rounded is-dark custom-link-btn">
+                      <span class="icon">
+                        <span aria-hidden="true">&#x1F917;</span>
+                      </span>
+                      <span>Hugging Face</span>
+                    </a>
+                  </span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Opening 1x2 Teaser Figures: ablation_grid_2x5.png & radar_all_methods.png -->
+    <section class="section teaser-section">
+      <div class="container is-max-widescreen">
+        <div class="teaser-1x2-grid">
+          <figure class="teaser-card">
+            <img src="static/images/ablation_grid_2x5.png" alt="Cumulative ablation of core modules (Base, +SRE, +PRE, +ACE, +WAEPO) across ten metrics on CAS(ME)²" loading="eager">
+            <p class="figure-note"><strong>Cumulative Module Gains:</strong> Progressive addition of SRE, PRE, ACE, and WAEPO consistently elevates spotting (F1<sub>spot</sub> +0.138), interval understanding (F1<sub>reg</sub><sup>TP</sup> +0.224, UAR<sub>reg</sub><sup>TP</sup> +0.242), AU grounding, and composite STRS (+0.129) while cutting counting errors on CAS(ME)<sup>2</sup>.</p>
+          </figure>
+          <figure class="teaser-card">
+            <img src="static/images/radar_all_methods.png" alt="Comprehensive radar comparison of MEWM-Agent and 13 MLLM baselines across CAS(ME)², SAMM-LV, CAS(ME)³, and 4DME" loading="eager">
+            <p class="figure-note"><strong>All-Benchmark Leadership:</strong> Multi-dimensional comparison across CAS(ME)<sup>2</sup>, SAMM-LV, CAS(ME)<sup>3</sup>, and 4DME showing MEWM-Agent establishing the outer performance envelope on every metric.</p>
+          </figure>
+        </div>
+      </div>
+    </section>
+    <!-- End opening 1x2 teaser figures -->
+
+    <!-- Paper Abstract -->
+    <section class="section hero is-light">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3" id="abstract">Abstract</h2>
+            <div class="content has-text-justified">
+              <p>
+                Long-video micro-expression question answering (<strong>ME-LVQA</strong>) requires spotting brief,
+                low-amplitude micro-expressions (MEs) across thousands of frames, attributing them to emotional states,
+                and generating a coherent global narrative. Although existing methods have improved ME representation
+                and event spotting, they exhibit two fundamental limitations: they cannot reliably separate
+                expression-related motion from head movement and confounding facial activity, and they do not sustain
+                verifiable AU-to-emotion evidence chains across video segments. To address these limitations, we present
+                <strong>MEWM-Agent</strong>, a multi-agent interactive emotional world model for ME-LVQA. A future event
+                perception mechanism learns subject-specific facial dynamics from AU-centered dual-timescale historical
+                states and fuses them with structured prediction deviations to generate candidate intervals. Building on
+                this perception, four specialized agents progressively verify motion evidence, attribute AUs, and
+                formulate emotion hypotheses. A four-layer working, episodic, semantic, and global memory system with
+                evidence token regulation preserves cross-segment context and evidence provenance within a bounded token
+                budget. To stabilize policy optimization, <strong>World Model Anchored Evidence-guided Policy
+                Optimization (WAEPO)</strong> adopts On-Policy Distillation, in which a teacher policy supplies
+                on-policy trajectories whose reward distribution tracks the student's, advantage baselines compute
+                exclusively from student samples, and supervision enters through a decoupled likelihood term.
+                Hierarchical process rewards further constrain policy updates by outcome correctness, evidence
+                sufficiency, and causal consistency. Experiments on four long-video datasets demonstrate
+                state-of-the-art performance in ME spotting, ME understanding, and ME-LVQA.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End Paper Abstract -->
+
+    <!-- Paradigm Comparison & Table I (Agent Roles) -->
+    <section class="section scp-table-section">
+      <div class="container is-max-widescreen">
+        <h2 class="title is-3 has-text-centered" id="paradigm-comparison">Comparison of ME Analysis Paradigms &amp; Role-Isolated Agents</h2>
+
+        <div class="columns is-desktop is-vcentered" style="margin-bottom: 2.2rem;">
+          <div class="column content is-5 has-text-justified">
+            <p>
+              <strong>Why MEWM-Agent?</strong> Micro-expressions are transient, low-amplitude facial events interleaved
+              with macro-expressions (MaEs), head motions, eye blinks, and illumination shifts across thousands of
+              frames. Existing paradigms struggle to unify temporal localization and verifiable causal attribution:
+            </p>
+            <ul>
+              <li><strong>Traditional ME Analysis:</strong> Directly maps short cropped clips to discrete emotion categories without explicit causal reasoning or verifiable evidence chains.</li>
+              <li><strong>MLLM-based ME Analysis:</strong> Generates fluent free-form descriptions, yet suffers from AU hallucinations, error propagation, and missing subject-specific baselines across segments.</li>
+              <li><strong>Proposed MEWM-Agent:</strong> Grounds long-video spotting and question answering in an interactive emotional world model, coordinating four role-isolated agents over shared memory to produce verifiable emotion labels, AU&rarr;emotion causal chains, and audited evidence reports.</li>
+            </ul>
+          </div>
+          <div class="column is-7">
+            <figure class="image paper-figure" style="margin: 0;">
+              <img src="static/images/F0.png" alt="Comparison of ME analysis paradigms: Traditional, MLLM-based, and Proposed MEWM-Agent" loading="lazy" style="display: block; width: 100%; height: auto;">
+              <p class="figure-note"><strong>Comparison of ME analysis paradigms.</strong> (a) Traditional methods directly predict emotion categories without an evidence chain. (b) MLLM-based methods generate descriptions but suffer from reasoning hallucinations. (c) MEWM-Agent performs verifiable causal reasoning through multi-agent collaboration with shared memory.</p>
+            </figure>
+          </div>
+        </div>
+
+        <!-- Table I: Agent Roles, Engine Services, and Evidence Visibility -->
+        <div class="scp-table-block">
+          <p class="scp-table-caption">
+            <strong>Table I: Agent Roles, Engine Services, and Evidence Visibility.</strong> The Agent Coordination Engine (ACE) organizes reasoning along four progressive evidence levels. Strict role visibility projection prevents premature conclusion leakage and silent consensus while routing independent counterfactual challenges through world-model services.
+          </p>
+          <div class="scp-table-wrap">
+            <table class="scp-results-table role-compare-table">
+              <thead>
+                <tr>
+                  <th>Agent</th>
+                  <th>Core Responsibility</th>
+                  <th>Engine Services</th>
+                  <th>Visibility Constraint</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Perception</td>
+                  <td>Validate ME candidate boundaries and regional motion</td>
+                  <td>SRE motion measurements; PRE salience</td>
+                  <td>AU activations and emotion labels hidden</td>
+                </tr>
+                <tr>
+                  <td>Structuring</td>
+                  <td>Identify AU activations; construct AU temporal dynamic graph</td>
+                  <td>SRE AU slot readouts; PRE interaction priors</td>
+                  <td>Motion evidence and slot trajectories visible; emotion fields hidden</td>
+                </tr>
+                <tr>
+                  <td>Reasoning</td>
+                  <td>Generate emotion hypotheses; calibrate confidence; produce causal narration</td>
+                  <td>PRE rollout, hypothesis scoring, slot masking</td>
+                  <td>Phase-gated evidence visible; challenges self-directed only</td>
+                </tr>
+                <tr class="ours-row">
+                  <td>Critic-verification</td>
+                  <td>Assess hypothesis likelihood and AU slot necessity via counterfactual masking</td>
+                  <td>PRE rollout, scoring, masking, counterfactual comparison</td>
+                  <td>Emotion hypotheses and supporting evidence visible; final answer hidden</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End Paradigm Comparison & Table I -->
+
+    <!-- Method: Architecture, Role-Isolated Agents, and Four-Layer Memory -->
+    <section class="section hero is-light">
+      <div class="container is-max-widescreen">
+        <h2 class="title is-3 has-text-centered" id="method">Architecture: Emotional World Model &amp; Long-Context Memory</h2>
+
+        <div class="content has-text-justified" style="max-width: 1080px; margin: 0 auto 1.4rem;">
+          <p>
+            <strong>Unified World-Model State Space.</strong> MEWM-Agent interconnects three core engines with a four-layer memory hierarchy and evidence-guided reinforcement learning:
+            (1) the <strong>State Representation Engine (SRE)</strong> encodes frame-wise observations into AU-centered dual-timescale states <code>z<sub>t</sub> = (z<sub>t</sub><sup>s</sup>, z<sub>t</sub><sup>m</sup>, z<sub>t</sub><sup>e</sup>)</code> separating slow subject-specific baselines from fast transient facial motion;
+            (2) the <strong>Prediction and Rollout Engine (PRE)</strong> models subject-specific stationary dynamics, removes scene and physiological fluctuations to compute the normalized decomposed prediction error <code>S<sub>t</sub></code> for future event perception, and provides emotion-conditioned trajectory rollouts; and
+            (3) the <strong>Agent Coordination Engine (ACE)</strong> orchestrates four specialized agents trained via <strong>WAEPO</strong> with On-Policy Distillation (OPD) and Student-Informed Teacher Training (SITT).
+          </p>
+        </div>
+
+        <figure class="image paper-figure" style="max-width: 1120px; margin: 0 auto 2.4rem;">
+          <img src="static/images/F1.png" alt="Overall architecture of MEWM-Agent" loading="lazy" style="display: block; width: 100%; height: auto;">
+          <p class="figure-note"><strong>Overall architecture of MEWM-Agent.</strong> SRE encodes AU-centered dual-timescale states, PRE derives ME candidates via the decomposed prediction error <em>S<sub>t</sub></em>, ACE coordinates four role-isolated agents over a four-layer memory system, and WAEPO optimizes the policy through On-Policy Distillation (OPD) with cascaded process rewards.</p>
+        </figure>
+
+        <h3 class="subsection-heading">Role-Isolated Multi-Agent Collaboration</h3>
+        <figure class="image paper-figure" style="max-width: 1080px; margin: 0 auto 2.4rem;">
+          <img src="static/images/F2.png" alt="Role-isolated multi-agent framework of MEWM-Agent" loading="lazy" style="display: block; width: 100%; height: auto;">
+          <p class="figure-note"><strong>Role-isolated multi-agent framework.</strong> Four MLLMs equipped with role-specific LoRA adapters coordinate through shared memory and engine services: the perception agent validates motion evidence, the structuring agent constructs AU temporal dynamic graphs, the reasoning agent generates causal CoT chains and emotion labels, and the verification agent returns audited evidence reports via counterfactual slot masking.</p>
+        </figure>
+
+        <div class="columns is-desktop is-vcentered">
+          <div class="column content is-6 has-text-justified">
+            <h3 class="subsection-heading" style="text-align: left; margin-top: 0 !important;">Four-Layer Long-Context Memory System</h3>
+            <p>
+              Sustaining subject-specific baselines and cross-segment context over thousands of frames requires structured memory management within a bounded token budget. MEWM-Agent organizes evidence across four complementary stores:
+            </p>
+            <ul>
+              <li><strong>Working Memory (&#x1D54E;):</strong> Maintains proposal-level active reasoning states, sliding-window observations, key phase frames, and error indices for boundary backtracking.</li>
+              <li><strong>Episodic Memory (&#x1D53C;):</strong> Stores verified event segments, AU structures, causal chains, and out-of-segment neutral baselines in an append-only tree across the video timeline.</li>
+              <li><strong>Semantic Memory (&#x1D54A;):</strong> Accumulates versioned FACS AU constraints, antagonism priors, emotion prototypes, and verified rollout precedents without leaking current-sample answers.</li>
+              <li><strong>Global Memory (&#x1D53E;):</strong> Coordinates &#x1D54E;, &#x1D53C;, and &#x1D54A; through relevance filtering, personalization links, and dynamic evidence token regulation.</li>
+            </ul>
+          </div>
+          <div class="column is-6">
+            <figure class="image paper-figure" style="margin: 0;">
+              <img src="static/images/F3.png" alt="Four-layer memory system of MEWM-Agent: Working, Episodic, Semantic, and Global Memory" loading="lazy" style="display: block; width: 100%; height: auto;">
+              <p class="figure-note"><strong>Four-layer memory module.</strong> (a) Working Memory, (b) Episodic Memory, (c) Semantic Memory, and (d) Global Memory with cross-video personalization and token budget regulation.</p>
+            </figure>
+          </div>
+        </div>
+
+        <div class="key-takeaways">
+          <p class="takeaways-title">Key Architectural Takeaways</p>
+          <ul>
+            <li>AU-centered dual-timescale states decouple transient micro-expression motion from subject-specific baseline drift and head movement.</li>
+            <li>Role-isolated perception, structuring, reasoning, and heterogeneous critic-verification agents enforce verifiable AU&rarr;emotion causal chains.</li>
+            <li>Four-layer memory preserves cross-segment baselines and evidence provenance within a strictly bounded token budget.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- End Method Section -->
+
+    <!-- Main Experimental Results: Tables II - VIII & Task-Level Figure -->
+    <section class="section scp-table-section">
+      <div class="container is-max-widescreen">
+        <h2 class="title is-3 has-text-centered" id="experimental-results">How Well Does MEWM-Agent Perform?</h2>
+
+        <!-- Table II: Long-Video Spotting -->
+        <div class="scp-table-block">
+          <h3 class="subsection-heading" style="margin-top: 0 !important;">Long-Video MaE &amp; ME Spotting (Protocol 1)</h3>
+          <p class="scp-table-caption">
+            <strong>Table II: Long-Video MaE and ME Spotting Results (F1<sub>spot</sub>, IoU &ge; 0.5) of Traditional Methods and MLLMs on CAS(ME)<sup>2</sup>, SAMM-LV, CAS(ME)<sup>3</sup>, and 4DME.</strong>
+            <code>MEWM-Agent-T</code> denotes the SITT-refined 30B teacher (Qwen3-VL-30B-A3B), and <code>MEWM-Agent</code> denotes our 7B student (Qwen2.5-VL-7B) after WAEPO On-Policy Distillation. Overall columns are highlighted, and the best student performance on each metric is boxed.
+          </p>
+          <div class="scp-table-wrap">
+            <table class="scp-results-table">
+              <thead>
+                <tr>
+                  <th rowspan="2">Method</th>
+                  <th colspan="3">CAS(ME)<sup>2</sup></th>
+                  <th colspan="3">SAMM-LV</th>
+                  <th colspan="3">CAS(ME)<sup>3</sup></th>
+                  <th colspan="3">4DME</th>
+                </tr>
+                <tr>
+                  <th>MaE&uarr;</th>
+                  <th>ME&uarr;</th>
+                  <th class="avg-col">Overall&uarr;</th>
+                  <th>MaE&uarr;</th>
+                  <th>ME&uarr;</th>
+                  <th class="avg-col">Overall&uarr;</th>
+                  <th>MaE&uarr;</th>
+                  <th>ME&uarr;</th>
+                  <th class="avg-col">Overall&uarr;</th>
+                  <th>MaE&uarr;</th>
+                  <th>ME&uarr;</th>
+                  <th class="avg-col">Overall&uarr;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="group-row">
+                  <td colspan="13">&#9679; <em>Traditional Spotting Methods</em></td>
+                </tr>
+                <tr>
+                  <td>MDMD<sup>&dagger;</sup></td>
+                  <td>0.120</td><td>0.008</td><td class="avg-col">0.038</td>
+                  <td>0.063</td><td>0.036</td><td class="avg-col">0.045</td>
+                  <td>&mdash;</td><td>&mdash;</td><td class="avg-col">&mdash;</td>
+                  <td>&mdash;</td><td>&mdash;</td><td class="avg-col">&mdash;</td>
+                </tr>
+                <tr>
+                  <td>SOFTNet<sup>&dagger;</sup></td>
+                  <td>0.241</td><td>0.117</td><td class="avg-col">0.202</td>
+                  <td>0.217</td><td>0.152</td><td class="avg-col">0.188</td>
+                  <td>&mdash;</td><td>&mdash;</td><td class="avg-col">&mdash;</td>
+                  <td>&mdash;</td><td>&mdash;</td><td class="avg-col">&mdash;</td>
+                </tr>
+                <tr>
+                  <td>LSSNet<sup>&dagger;</sup></td>
+                  <td>0.377</td><td>0.042</td><td class="avg-col">0.325</td>
+                  <td>0.281</td><td>0.131</td><td class="avg-col">0.238</td>
+                  <td>&mdash;</td><td>&mdash;</td><td class="avg-col">&mdash;</td>
+                  <td>&mdash;</td><td>&mdash;</td><td class="avg-col">&mdash;</td>
+                </tr>
+
+                <tr class="group-row">
+                  <td colspan="13">&#9679; <em>Closed-source MLLMs</em></td>
+                </tr>
+                <tr>
+                  <td>GPT-4o-mini</td>
+                  <td>0.289</td><td>0.119</td><td class="avg-col">0.216</td>
+                  <td>0.243</td><td>0.097</td><td class="avg-col">0.182</td>
+                  <td>0.223</td><td>0.087</td><td class="avg-col">0.165</td>
+                  <td>0.207</td><td>0.081</td><td class="avg-col">0.153</td>
+                </tr>
+                <tr>
+                  <td>GPT-4o</td>
+                  <td>0.354</td><td>0.148</td><td class="avg-col">0.263</td>
+                  <td>0.298</td><td>0.122</td><td class="avg-col">0.219</td>
+                  <td>0.274</td><td>0.110</td><td class="avg-col">0.201</td>
+                  <td>0.253</td><td>0.103</td><td class="avg-col">0.186</td>
+                </tr>
+                <tr>
+                  <td>Gemini-2.5-Flash</td>
+                  <td>0.267</td><td>0.111</td><td class="avg-col">0.201</td>
+                  <td>0.224</td><td>0.091</td><td class="avg-col">0.168</td>
+                  <td>0.206</td><td>0.083</td><td class="avg-col">0.155</td>
+                  <td>0.191</td><td>0.077</td><td class="avg-col">0.143</td>
+                </tr>
+                <tr>
+                  <td>Gemini-2.5-Pro</td>
+                  <td>0.328</td><td>0.137</td><td class="avg-col">0.246</td>
+                  <td>0.276</td><td>0.113</td><td class="avg-col">0.205</td>
+                  <td>0.254</td><td>0.103</td><td class="avg-col">0.188</td>
+                  <td>0.235</td><td>0.096</td><td class="avg-col">0.174</td>
+                </tr>
+                <tr>
+                  <td>Gemini-3-Flash</td>
+                  <td>0.311</td><td>0.129</td><td class="avg-col">0.233</td>
+                  <td>0.261</td><td>0.106</td><td class="avg-col">0.195</td>
+                  <td>0.240</td><td>0.097</td><td class="avg-col">0.178</td>
+                  <td>0.222</td><td>0.090</td><td class="avg-col">0.165</td>
+                </tr>
+                <tr>
+                  <td>Gemini-3-Pro</td>
+                  <td>0.371</td><td>0.154</td><td class="avg-col">0.275</td>
+                  <td>0.312</td><td>0.130</td><td class="avg-col">0.231</td>
+                  <td>0.287</td><td>0.119</td><td class="avg-col">0.213</td>
+                  <td>0.265</td><td>0.110</td><td class="avg-col">0.197</td>
+                </tr>
+                <tr>
+                  <td>Claude-Sonnet-4.5</td>
+                  <td>0.336</td><td>0.142</td><td class="avg-col">0.252</td>
+                  <td>0.283</td><td>0.118</td><td class="avg-col">0.209</td>
+                  <td>0.260</td><td>0.107</td><td class="avg-col">0.192</td>
+                  <td>0.241</td><td>0.099</td><td class="avg-col">0.178</td>
+                </tr>
+
+                <tr class="group-row">
+                  <td colspan="13">&#9679; <em>Open-source MLLMs</em></td>
+                </tr>
+                <tr>
+                  <td>Qwen2.5-VL-7B</td>
+                  <td>0.328</td><td>0.208</td><td class="avg-col">0.277</td>
+                  <td>0.276</td><td>0.178</td><td class="avg-col">0.244</td>
+                  <td>0.254</td><td>0.162</td><td class="avg-col">0.224</td>
+                  <td>0.235</td><td>0.152</td><td class="avg-col">0.207</td>
+                </tr>
+                <tr>
+                  <td>Qwen2.5-Omni-7B</td>
+                  <td>0.342</td><td>0.218</td><td class="avg-col">0.289</td>
+                  <td>0.288</td><td>0.186</td><td class="avg-col">0.253</td>
+                  <td>0.265</td><td>0.170</td><td class="avg-col">0.233</td>
+                  <td>0.245</td><td>0.158</td><td class="avg-col">0.216</td>
+                </tr>
+                <tr>
+                  <td>Qwen2.5-VL-32B</td>
+                  <td>0.376</td><td>0.331</td><td class="avg-col">0.360</td>
+                  <td>0.317</td><td>0.284</td><td class="avg-col">0.306</td>
+                  <td>0.292</td><td>0.257</td><td class="avg-col">0.281</td>
+                  <td>0.270</td><td>0.236</td><td class="avg-col">0.260</td>
+                </tr>
+                <tr>
+                  <td>Qwen3-VL-8B</td>
+                  <td>0.356</td><td>0.225</td><td class="avg-col">0.302</td>
+                  <td>0.300</td><td>0.194</td><td class="avg-col">0.261</td>
+                  <td>0.276</td><td>0.176</td><td class="avg-col">0.241</td>
+                  <td>0.256</td><td>0.164</td><td class="avg-col">0.224</td>
+                </tr>
+                <tr>
+                  <td>Qwen3-VL-30B</td>
+                  <td>0.392</td><td>0.352</td><td class="avg-col">0.380</td>
+                  <td>0.331</td><td>0.305</td><td class="avg-col">0.323</td>
+                  <td>0.304</td><td>0.275</td><td class="avg-col">0.296</td>
+                  <td>0.281</td><td>0.249</td><td class="avg-col">0.272</td>
+                </tr>
+                <tr>
+                  <td>GLM-4.1V-9B</td>
+                  <td>0.365</td><td>0.232</td><td class="avg-col">0.311</td>
+                  <td>0.308</td><td>0.199</td><td class="avg-col">0.268</td>
+                  <td>0.283</td><td>0.181</td><td class="avg-col">0.248</td>
+                  <td>0.262</td><td>0.169</td><td class="avg-col">0.231</td>
+                </tr>
+
+                <tr class="group-row">
+                  <td colspan="13">&#9679; <em>Proposed Emotional World Model Agents</em></td>
+                </tr>
+                <tr class="teacher-row">
+                  <td>MEWM-Agent-T (Teacher)</td>
+                  <td>0.461</td><td>0.397</td><td class="avg-col">0.434</td>
+                  <td>0.421</td><td>0.347</td><td class="avg-col">0.389</td>
+                  <td>0.374</td><td>0.312</td><td class="avg-col">0.349</td>
+                  <td>0.338</td><td>0.284</td><td class="avg-col">0.316</td>
+                </tr>
+                <tr class="ours-row">
+                  <td>MEWM-Agent (Ours)</td>
+                  <td><span class="boxed-best">0.429</span></td><td><span class="boxed-best">0.363</span></td><td class="avg-col deep-cell">0.401</td>
+                  <td><span class="boxed-best">0.392</span></td><td><span class="boxed-best">0.314</span></td><td class="avg-col deep-cell">0.358</td>
+                  <td><span class="boxed-best">0.347</span></td><td><span class="boxed-best">0.281</span></td><td class="avg-col deep-cell">0.319</td>
+                  <td><span class="boxed-best">0.312</span></td><td><span class="boxed-best">0.253</span></td><td class="avg-col deep-cell">0.287</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="scp-table-footnote">
+            Note: MaE and ME are counted separately, and Overall merges both counts. <sup>&dagger;</sup> denotes results cited from the original papers, which cover only CAS(ME)<sup>2</sup> and SAMM-LV. All MLLMs perform zero-shot spotting with identical frame sampling and unified prompts.
+          </p>
+        </div>
+
+        <!-- Table III: Emotion Understanding on GT Intervals -->
+        <div class="scp-table-block">
+          <h3 class="subsection-heading">Interval Micro-Expression Understanding on GT &amp; TP Intervals (Protocol 2)</h3>
+          <p class="scp-table-caption">
+            <strong>Table III: Coarse- and Fine-Grained Emotion Understanding Results on GT Intervals (BL: BLEU; RL: ROUGE-L).</strong>
+            Evaluated across CAS(ME)<sup>2</sup>, SAMM-LV, CAS(ME)<sup>3</sup>, and 4DME using macro-averaged F1 and unweighted average recall (UAR) for coarse- and fine-grained emotion recognition, alongside BLEU and ROUGE-L for AU-grounded causal descriptions.
+          </p>
+          <div class="scp-table-wrap">
+            <table class="scp-results-table table-wide-25">
+              <thead>
+                <tr>
+                  <th rowspan="3">Method</th>
+                  <th colspan="6">CAS(ME)<sup>2</sup></th>
+                  <th colspan="6">SAMM-LV</th>
+                  <th colspan="6">CAS(ME)<sup>3</sup></th>
+                  <th colspan="6">4DME</th>
+                </tr>
+                <tr>
+                  <th colspan="2">Coarse</th><th colspan="2">Fine</th><th colspan="2">Text</th>
+                  <th colspan="2">Coarse</th><th colspan="2">Fine</th><th colspan="2">Text</th>
+                  <th colspan="2">Coarse</th><th colspan="2">Fine</th><th colspan="2">Text</th>
+                  <th colspan="2">Coarse</th><th colspan="2">Fine</th><th colspan="2">Text</th>
+                </tr>
+                <tr>
+                  <th class="avg-col">F1&uarr;</th><th>UAR&uarr;</th><th>F1&uarr;</th><th>UAR&uarr;</th><th>BL&uarr;</th><th>RL&uarr;</th>
+                  <th class="avg-col">F1&uarr;</th><th>UAR&uarr;</th><th>F1&uarr;</th><th>UAR&uarr;</th><th>BL&uarr;</th><th>RL&uarr;</th>
+                  <th class="avg-col">F1&uarr;</th><th>UAR&uarr;</th><th>F1&uarr;</th><th>UAR&uarr;</th><th>BL&uarr;</th><th>RL&uarr;</th>
+                  <th class="avg-col">F1&uarr;</th><th>UAR&uarr;</th><th>F1&uarr;</th><th>UAR&uarr;</th><th>BL&uarr;</th><th>RL&uarr;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="group-row">
+                  <td colspan="25">&#9679; <em>Closed-source MLLMs</em></td>
+                </tr>
+                <tr>
+                  <td>GPT-4o-mini</td>
+                  <td class="avg-col">0.335</td><td>0.356</td><td>0.161</td><td>0.186</td><td>0.095</td><td>0.214</td>
+                  <td class="avg-col">0.302</td><td>0.330</td><td>0.143</td><td>0.166</td><td>0.084</td><td>0.196</td>
+                  <td class="avg-col">0.282</td><td>0.305</td><td>0.136</td><td>0.155</td><td>0.080</td><td>0.183</td>
+                  <td class="avg-col">0.262</td><td>0.280</td><td>0.127</td><td>0.145</td><td>0.074</td><td>0.165</td>
+                </tr>
+                <tr>
+                  <td>GPT-4o</td>
+                  <td class="avg-col">0.408</td><td>0.433</td><td>0.196</td><td>0.226</td><td>0.116</td><td>0.260</td>
+                  <td class="avg-col">0.368</td><td>0.402</td><td>0.174</td><td>0.202</td><td>0.102</td><td>0.239</td>
+                  <td class="avg-col">0.343</td><td>0.371</td><td>0.165</td><td>0.189</td><td>0.097</td><td>0.223</td>
+                  <td class="avg-col">0.319</td><td>0.341</td><td>0.155</td><td>0.176</td><td>0.090</td><td>0.201</td>
+                </tr>
+                <tr>
+                  <td>Gemini-2.5-Flash</td>
+                  <td class="avg-col">0.312</td><td>0.331</td><td>0.150</td><td>0.173</td><td>0.089</td><td>0.199</td>
+                  <td class="avg-col">0.281</td><td>0.307</td><td>0.133</td><td>0.154</td><td>0.078</td><td>0.183</td>
+                  <td class="avg-col">0.262</td><td>0.283</td><td>0.126</td><td>0.144</td><td>0.074</td><td>0.170</td>
+                  <td class="avg-col">0.244</td><td>0.260</td><td>0.118</td><td>0.134</td><td>0.069</td><td>0.154</td>
+                </tr>
+                <tr>
+                  <td>Gemini-2.5-Pro</td>
+                  <td class="avg-col">0.381</td><td>0.405</td><td>0.183</td><td>0.211</td><td>0.108</td><td>0.243</td>
+                  <td class="avg-col">0.344</td><td>0.376</td><td>0.163</td><td>0.189</td><td>0.095</td><td>0.224</td>
+                  <td class="avg-col">0.321</td><td>0.347</td><td>0.154</td><td>0.177</td><td>0.091</td><td>0.209</td>
+                  <td class="avg-col">0.298</td><td>0.319</td><td>0.145</td><td>0.165</td><td>0.084</td><td>0.188</td>
+                </tr>
+                <tr>
+                  <td>Gemini-3-Flash</td>
+                  <td class="avg-col">0.361</td><td>0.384</td><td>0.174</td><td>0.200</td><td>0.103</td><td>0.230</td>
+                  <td class="avg-col">0.326</td><td>0.356</td><td>0.154</td><td>0.179</td><td>0.090</td><td>0.212</td>
+                  <td class="avg-col">0.304</td><td>0.329</td><td>0.146</td><td>0.167</td><td>0.086</td><td>0.198</td>
+                  <td class="avg-col">0.283</td><td>0.302</td><td>0.137</td><td>0.156</td><td>0.080</td><td>0.178</td>
+                </tr>
+                <tr>
+                  <td>Gemini-3-Pro</td>
+                  <td class="avg-col">0.431</td><td>0.470</td><td>0.212</td><td>0.242</td><td>0.123</td><td>0.281</td>
+                  <td class="avg-col">0.389</td><td>0.423</td><td>0.184</td><td>0.214</td><td>0.117</td><td>0.244</td>
+                  <td class="avg-col">0.362</td><td>0.391</td><td>0.171</td><td>0.196</td><td>0.101</td><td>0.230</td>
+                  <td class="avg-col">0.337</td><td>0.361</td><td>0.158</td><td>0.182</td><td>0.097</td><td>0.210</td>
+                </tr>
+                <tr>
+                  <td>Claude-Sonnet-4.5</td>
+                  <td class="avg-col">0.391</td><td>0.415</td><td>0.188</td><td>0.217</td><td>0.111</td><td>0.249</td>
+                  <td class="avg-col">0.353</td><td>0.385</td><td>0.167</td><td>0.194</td><td>0.098</td><td>0.229</td>
+                  <td class="avg-col">0.329</td><td>0.356</td><td>0.158</td><td>0.181</td><td>0.093</td><td>0.214</td>
+                  <td class="avg-col">0.306</td><td>0.327</td><td>0.149</td><td>0.169</td><td>0.086</td><td>0.193</td>
+                </tr>
+
+                <tr class="group-row">
+                  <td colspan="25">&#9679; <em>Open-source MLLMs</em></td>
+                </tr>
+                <tr>
+                  <td>Qwen2.5-VL-7B</td>
+                  <td class="avg-col">0.423</td><td>0.458</td><td>0.208</td><td>0.240</td><td>0.213</td><td>0.263</td>
+                  <td class="avg-col">0.384</td><td>0.414</td><td>0.186</td><td>0.216</td><td>0.189</td><td>0.250</td>
+                  <td class="avg-col">0.357</td><td>0.384</td><td>0.169</td><td>0.192</td><td>0.172</td><td>0.229</td>
+                  <td class="avg-col">0.332</td><td>0.362</td><td>0.160</td><td>0.185</td><td>0.163</td><td>0.216</td>
+                </tr>
+                <tr>
+                  <td>Qwen2.5-Omni-7B</td>
+                  <td class="avg-col">0.442</td><td>0.478</td><td>0.217</td><td>0.250</td><td>0.228</td><td>0.275</td>
+                  <td class="avg-col">0.401</td><td>0.432</td><td>0.194</td><td>0.226</td><td>0.198</td><td>0.261</td>
+                  <td class="avg-col">0.373</td><td>0.401</td><td>0.176</td><td>0.201</td><td>0.183</td><td>0.239</td>
+                  <td class="avg-col">0.346</td><td>0.378</td><td>0.167</td><td>0.193</td><td>0.174</td><td>0.225</td>
+                </tr>
+                <tr>
+                  <td>Qwen2.5-VL-32B</td>
+                  <td class="avg-col">0.538</td><td>0.580</td><td>0.264</td><td>0.302</td><td>0.271</td><td>0.338</td>
+                  <td class="avg-col">0.488</td><td>0.524</td><td>0.237</td><td>0.272</td><td>0.241</td><td>0.315</td>
+                  <td class="avg-col">0.455</td><td>0.489</td><td>0.216</td><td>0.243</td><td>0.224</td><td>0.291</td>
+                  <td class="avg-col">0.424</td><td>0.461</td><td>0.203</td><td>0.234</td><td>0.208</td><td>0.272</td>
+                </tr>
+                <tr>
+                  <td>Qwen3-VL-8B</td>
+                  <td class="avg-col">0.459</td><td>0.496</td><td>0.225</td><td>0.260</td><td>0.243</td><td>0.285</td>
+                  <td class="avg-col">0.416</td><td>0.449</td><td>0.202</td><td>0.235</td><td>0.211</td><td>0.271</td>
+                  <td class="avg-col">0.387</td><td>0.416</td><td>0.183</td><td>0.208</td><td>0.196</td><td>0.248</td>
+                  <td class="avg-col">0.360</td><td>0.393</td><td>0.173</td><td>0.201</td><td>0.182</td><td>0.234</td>
+                </tr>
+                <tr>
+                  <td>Qwen3-VL-30B</td>
+                  <td class="avg-col">0.591</td><td>0.634</td><td>0.283</td><td>0.323</td><td>0.296</td><td>0.384</td>
+                  <td class="avg-col">0.538</td><td>0.572</td><td>0.260</td><td>0.296</td><td>0.264</td><td>0.341</td>
+                  <td class="avg-col">0.502</td><td>0.541</td><td>0.245</td><td>0.281</td><td>0.249</td><td>0.324</td>
+                  <td class="avg-col">0.468</td><td>0.498</td><td>0.227</td><td>0.260</td><td>0.231</td><td>0.292</td>
+                </tr>
+                <tr>
+                  <td>GLM-4.1V-9B</td>
+                  <td class="avg-col">0.451</td><td>0.491</td><td>0.220</td><td>0.253</td><td>0.219</td><td>0.287</td>
+                  <td class="avg-col">0.409</td><td>0.440</td><td>0.198</td><td>0.228</td><td>0.197</td><td>0.257</td>
+                  <td class="avg-col">0.381</td><td>0.415</td><td>0.182</td><td>0.208</td><td>0.185</td><td>0.245</td>
+                  <td class="avg-col">0.354</td><td>0.381</td><td>0.169</td><td>0.196</td><td>0.171</td><td>0.221</td>
+                </tr>
+
+                <tr class="group-row">
+                  <td colspan="25">&#9679; <em>Proposed Emotional World Model Agents</em></td>
+                </tr>
+                <tr class="teacher-row">
+                  <td>MEWM-Agent-T (Teacher)</td>
+                  <td class="avg-col">0.678</td><td>0.718</td><td>0.441</td><td>0.469</td><td>0.452</td><td>0.591</td>
+                  <td class="avg-col">0.624</td><td>0.651</td><td>0.402</td><td>0.429</td><td>0.412</td><td>0.541</td>
+                  <td class="avg-col">0.615</td><td>0.647</td><td>0.389</td><td>0.419</td><td>0.405</td><td>0.542</td>
+                  <td class="avg-col">0.661</td><td>0.696</td><td>0.421</td><td>0.453</td><td>0.434</td><td>0.583</td>
+                </tr>
+                <tr class="ours-row">
+                  <td>MEWM-Agent (Ours)</td>
+                  <td class="avg-col deep-cell">0.641</td><td><span class="boxed-best">0.673</span></td><td><span class="boxed-best">0.398</span></td><td><span class="boxed-best">0.431</span></td><td><span class="boxed-best">0.413</span></td><td><span class="boxed-best">0.549</span></td>
+                  <td class="avg-col deep-cell">0.578</td><td><span class="boxed-best">0.609</span></td><td><span class="boxed-best">0.359</span></td><td><span class="boxed-best">0.388</span></td><td><span class="boxed-best">0.373</span></td><td><span class="boxed-best">0.496</span></td>
+                  <td class="avg-col deep-cell">0.568</td><td><span class="boxed-best">0.601</span></td><td><span class="boxed-best">0.347</span></td><td><span class="boxed-best">0.378</span></td><td><span class="boxed-best">0.363</span></td><td><span class="boxed-best">0.496</span></td>
+                  <td class="avg-col deep-cell">0.619</td><td><span class="boxed-best">0.652</span></td><td><span class="boxed-best">0.378</span></td><td><span class="boxed-best">0.411</span></td><td><span class="boxed-best">0.395</span></td><td><span class="boxed-best">0.538</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Table IV: Emotion Understanding on TP Intervals -->
+        <div class="scp-table-block">
+          <p class="scp-table-caption">
+            <strong>Table IV: Coarse- and Fine-Grained Emotion Understanding Results on TP Intervals (BL: BLEU; RL: ROUGE-L).</strong>
+            TP-interval evaluation reflects understanding conditioned on spotted intervals. MEWM-Agent exhibits substantially smaller GT-to-TP degradation than all baselines because predictive spotting captures complete onset-apex-offset motion phases.
+          </p>
+          <div class="scp-table-wrap">
+            <table class="scp-results-table table-wide-25">
+              <thead>
+                <tr>
+                  <th rowspan="3">Method</th>
+                  <th colspan="6">CAS(ME)<sup>2</sup></th>
+                  <th colspan="6">SAMM-LV</th>
+                  <th colspan="6">CAS(ME)<sup>3</sup></th>
+                  <th colspan="6">4DME</th>
+                </tr>
+                <tr>
+                  <th colspan="2">Coarse</th><th colspan="2">Fine</th><th colspan="2">Text</th>
+                  <th colspan="2">Coarse</th><th colspan="2">Fine</th><th colspan="2">Text</th>
+                  <th colspan="2">Coarse</th><th colspan="2">Fine</th><th colspan="2">Text</th>
+                  <th colspan="2">Coarse</th><th colspan="2">Fine</th><th colspan="2">Text</th>
+                </tr>
+                <tr>
+                  <th class="avg-col">F1&uarr;</th><th>UAR&uarr;</th><th>F1&uarr;</th><th>UAR&uarr;</th><th>BL&uarr;</th><th>RL&uarr;</th>
+                  <th class="avg-col">F1&uarr;</th><th>UAR&uarr;</th><th>F1&uarr;</th><th>UAR&uarr;</th><th>BL&uarr;</th><th>RL&uarr;</th>
+                  <th class="avg-col">F1&uarr;</th><th>UAR&uarr;</th><th>F1&uarr;</th><th>UAR&uarr;</th><th>BL&uarr;</th><th>RL&uarr;</th>
+                  <th class="avg-col">F1&uarr;</th><th>UAR&uarr;</th><th>F1&uarr;</th><th>UAR&uarr;</th><th>BL&uarr;</th><th>RL&uarr;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="group-row">
+                  <td colspan="25">&#9679; <em>Closed-source MLLMs</em></td>
+                </tr>
+                <tr>
+                  <td>GPT-4o-mini</td>
+                  <td class="avg-col">0.272</td><td>0.283</td><td>0.131</td><td>0.148</td><td>0.077</td><td>0.170</td>
+                  <td class="avg-col">0.253</td><td>0.280</td><td>0.120</td><td>0.142</td><td>0.071</td><td>0.166</td>
+                  <td class="avg-col">0.228</td><td>0.246</td><td>0.111</td><td>0.127</td><td>0.065</td><td>0.150</td>
+                  <td class="avg-col">0.217</td><td>0.233</td><td>0.105</td><td>0.121</td><td>0.062</td><td>0.136</td>
+                </tr>
+                <tr>
+                  <td>GPT-4o</td>
+                  <td class="avg-col">0.331</td><td>0.344</td><td>0.159</td><td>0.180</td><td>0.094</td><td>0.207</td>
+                  <td class="avg-col">0.308</td><td>0.340</td><td>0.146</td><td>0.173</td><td>0.086</td><td>0.202</td>
+                  <td class="avg-col">0.277</td><td>0.299</td><td>0.135</td><td>0.154</td><td>0.079</td><td>0.182</td>
+                  <td class="avg-col">0.264</td><td>0.283</td><td>0.128</td><td>0.147</td><td>0.075</td><td>0.165</td>
+                </tr>
+                <tr>
+                  <td>Gemini-2.5-Flash</td>
+                  <td class="avg-col">0.253</td><td>0.263</td><td>0.121</td><td>0.138</td><td>0.072</td><td>0.158</td>
+                  <td class="avg-col">0.235</td><td>0.260</td><td>0.112</td><td>0.132</td><td>0.066</td><td>0.154</td>
+                  <td class="avg-col">0.212</td><td>0.228</td><td>0.103</td><td>0.118</td><td>0.060</td><td>0.139</td>
+                  <td class="avg-col">0.202</td><td>0.216</td><td>0.098</td><td>0.112</td><td>0.057</td><td>0.126</td>
+                </tr>
+                <tr>
+                  <td>Gemini-2.5-Pro</td>
+                  <td class="avg-col">0.309</td><td>0.322</td><td>0.149</td><td>0.168</td><td>0.088</td><td>0.194</td>
+                  <td class="avg-col">0.288</td><td>0.318</td><td>0.137</td><td>0.162</td><td>0.080</td><td>0.189</td>
+                  <td class="avg-col">0.259</td><td>0.280</td><td>0.126</td><td>0.144</td><td>0.074</td><td>0.170</td>
+                  <td class="avg-col">0.247</td><td>0.265</td><td>0.120</td><td>0.137</td><td>0.070</td><td>0.154</td>
+                </tr>
+                <tr>
+                  <td>Gemini-3-Flash</td>
+                  <td class="avg-col">0.293</td><td>0.305</td><td>0.141</td><td>0.160</td><td>0.083</td><td>0.183</td>
+                  <td class="avg-col">0.273</td><td>0.301</td><td>0.129</td><td>0.153</td><td>0.076</td><td>0.179</td>
+                  <td class="avg-col">0.245</td><td>0.265</td><td>0.120</td><td>0.136</td><td>0.070</td><td>0.161</td>
+                  <td class="avg-col">0.234</td><td>0.251</td><td>0.113</td><td>0.130</td><td>0.066</td><td>0.146</td>
+                </tr>
+                <tr>
+                  <td>Gemini-3-Pro</td>
+                  <td class="avg-col">0.354</td><td>0.385</td><td>0.175</td><td>0.203</td><td>0.102</td><td>0.235</td>
+                  <td class="avg-col">0.314</td><td>0.343</td><td>0.149</td><td>0.171</td><td>0.095</td><td>0.198</td>
+                  <td class="avg-col">0.291</td><td>0.309</td><td>0.136</td><td>0.155</td><td>0.081</td><td>0.186</td>
+                  <td class="avg-col">0.277</td><td>0.295</td><td>0.128</td><td>0.150</td><td>0.080</td><td>0.170</td>
+                </tr>
+                <tr>
+                  <td>Claude-Sonnet-4.5</td>
+                  <td class="avg-col">0.317</td><td>0.330</td><td>0.152</td><td>0.172</td><td>0.090</td><td>0.198</td>
+                  <td class="avg-col">0.295</td><td>0.326</td><td>0.140</td><td>0.166</td><td>0.082</td><td>0.194</td>
+                  <td class="avg-col">0.265</td><td>0.286</td><td>0.129</td><td>0.148</td><td>0.076</td><td>0.174</td>
+                  <td class="avg-col">0.253</td><td>0.271</td><td>0.123</td><td>0.141</td><td>0.072</td><td>0.158</td>
+                </tr>
+
+                <tr class="group-row">
+                  <td colspan="25">&#9679; <em>Open-source MLLMs</em></td>
+                </tr>
+                <tr>
+                  <td>Qwen2.5-VL-7B</td>
+                  <td class="avg-col">0.371</td><td>0.402</td><td>0.189</td><td>0.212</td><td>0.179</td><td>0.234</td>
+                  <td class="avg-col">0.324</td><td>0.349</td><td>0.158</td><td>0.184</td><td>0.158</td><td>0.218</td>
+                  <td class="avg-col">0.322</td><td>0.346</td><td>0.150</td><td>0.173</td><td>0.147</td><td>0.206</td>
+                  <td class="avg-col">0.284</td><td>0.306</td><td>0.136</td><td>0.157</td><td>0.139</td><td>0.183</td>
+                </tr>
+                <tr>
+                  <td>Qwen2.5-Omni-7B</td>
+                  <td class="avg-col">0.386</td><td>0.421</td><td>0.197</td><td>0.222</td><td>0.191</td><td>0.244</td>
+                  <td class="avg-col">0.337</td><td>0.363</td><td>0.164</td><td>0.191</td><td>0.166</td><td>0.226</td>
+                  <td class="avg-col">0.335</td><td>0.361</td><td>0.155</td><td>0.180</td><td>0.153</td><td>0.215</td>
+                  <td class="avg-col">0.296</td><td>0.319</td><td>0.142</td><td>0.162</td><td>0.144</td><td>0.191</td>
+                </tr>
+                <tr>
+                  <td>Qwen2.5-VL-32B</td>
+                  <td class="avg-col">0.463</td><td>0.506</td><td>0.233</td><td>0.261</td><td>0.236</td><td>0.293</td>
+                  <td class="avg-col">0.403</td><td>0.437</td><td>0.197</td><td>0.231</td><td>0.209</td><td>0.269</td>
+                  <td class="avg-col">0.401</td><td>0.433</td><td>0.187</td><td>0.216</td><td>0.194</td><td>0.252</td>
+                  <td class="avg-col">0.352</td><td>0.384</td><td>0.169</td><td>0.194</td><td>0.183</td><td>0.228</td>
+                </tr>
+                <tr>
+                  <td>Qwen3-VL-8B</td>
+                  <td class="avg-col">0.397</td><td>0.432</td><td>0.198</td><td>0.224</td><td>0.197</td><td>0.249</td>
+                  <td class="avg-col">0.348</td><td>0.378</td><td>0.169</td><td>0.198</td><td>0.172</td><td>0.231</td>
+                  <td class="avg-col">0.347</td><td>0.372</td><td>0.159</td><td>0.185</td><td>0.161</td><td>0.220</td>
+                  <td class="avg-col">0.304</td><td>0.329</td><td>0.145</td><td>0.166</td><td>0.151</td><td>0.196</td>
+                </tr>
+                <tr>
+                  <td>Qwen3-VL-30B</td>
+                  <td class="avg-col">0.519</td><td>0.558</td><td>0.244</td><td>0.285</td><td>0.258</td><td>0.338</td>
+                  <td class="avg-col">0.448</td><td>0.481</td><td>0.214</td><td>0.248</td><td>0.227</td><td>0.287</td>
+                  <td class="avg-col">0.418</td><td>0.459</td><td>0.208</td><td>0.240</td><td>0.214</td><td>0.275</td>
+                  <td class="avg-col">0.384</td><td>0.412</td><td>0.189</td><td>0.216</td><td>0.199</td><td>0.247</td>
+                </tr>
+                <tr>
+                  <td>GLM-4.1V-9B</td>
+                  <td class="avg-col">0.394</td><td>0.431</td><td>0.196</td><td>0.223</td><td>0.188</td><td>0.259</td>
+                  <td class="avg-col">0.355</td><td>0.378</td><td>0.172</td><td>0.199</td><td>0.163</td><td>0.223</td>
+                  <td class="avg-col">0.325</td><td>0.359</td><td>0.155</td><td>0.179</td><td>0.157</td><td>0.212</td>
+                  <td class="avg-col">0.308</td><td>0.336</td><td>0.148</td><td>0.169</td><td>0.148</td><td>0.194</td>
+                </tr>
+
+                <tr class="group-row">
+                  <td colspan="25">&#9679; <em>Proposed Emotional World Model Agents</em></td>
+                </tr>
+                <tr class="teacher-row">
+                  <td>MEWM-Agent-T (Teacher)</td>
+                  <td class="avg-col">0.613</td><td>0.681</td><td>0.339</td><td>0.364</td><td>0.318</td><td>0.473</td>
+                  <td class="avg-col">0.564</td><td>0.598</td><td>0.307</td><td>0.331</td><td>0.347</td><td>0.475</td>
+                  <td class="avg-col">0.589</td><td>0.621</td><td>0.379</td><td>0.408</td><td>0.388</td><td>0.516</td>
+                  <td class="avg-col">0.551</td><td>0.581</td><td>0.354</td><td>0.379</td><td>0.362</td><td>0.481</td>
+                </tr>
+                <tr class="ours-row">
+                  <td>MEWM-Agent (Ours)</td>
+                  <td class="avg-col deep-cell">0.571</td><td><span class="boxed-best">0.643</span></td><td><span class="boxed-best">0.302</span></td><td><span class="boxed-best">0.329</span></td><td><span class="boxed-best">0.287</span></td><td><span class="boxed-best">0.431</span></td>
+                  <td class="avg-col deep-cell">0.521</td><td><span class="boxed-best">0.559</span></td><td><span class="boxed-best">0.270</span></td><td><span class="boxed-best">0.294</span></td><td><span class="boxed-best">0.315</span></td><td><span class="boxed-best">0.432</span></td>
+                  <td class="avg-col deep-cell">0.547</td><td><span class="boxed-best">0.578</span></td><td><span class="boxed-best">0.341</span></td><td><span class="boxed-best">0.369</span></td><td><span class="boxed-best">0.354</span></td><td><span class="boxed-best">0.471</span></td>
+                  <td class="avg-col deep-cell">0.509</td><td><span class="boxed-best">0.539</span></td><td><span class="boxed-best">0.317</span></td><td><span class="boxed-best">0.343</span></td><td><span class="boxed-best">0.329</span></td><td><span class="boxed-best">0.438</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tables V - VIII: End-to-End ME-LVQA Evaluation -->
+        <div class="scp-table-block">
+          <h3 class="subsection-heading">End-to-End ME-LVQA: Event Counting, AU Set Prediction &amp; STRS (Protocol 3)</h3>
+          <div class="dataset-tabs" role="tablist" aria-label="Select ME-LVQA benchmark dataset">
+            <button type="button" class="dataset-tab-btn active" onclick="switchLvqaDataset('casme2', this)">CAS(ME)<sup>2</sup> (Table V)</button>
+            <button type="button" class="dataset-tab-btn" onclick="switchLvqaDataset('sammlv', this)">SAMM-LV (Table VI)</button>
+            <button type="button" class="dataset-tab-btn" onclick="switchLvqaDataset('casme3', this)">CAS(ME)<sup>3</sup> (Table VII)</button>
+            <button type="button" class="dataset-tab-btn" onclick="switchLvqaDataset('4dme', this)">4DME (Table VIII)</button>
+            <button type="button" class="dataset-tab-btn" onclick="switchLvqaDataset('all', this)">Show All (Tables V&ndash;VIII)</button>
+          </div>
+
+          <!-- Table V: CAS(ME)^2 (Visible by default) -->
+          <div class="lvqa-tab-panel active" data-dataset="casme2" style="margin-bottom: 1.8rem;">
+            <p class="scp-table-caption">
+              <strong>Table V: ME-LVQA Results of Event Counting, AU Set Prediction, and End-to-End Evaluation on CAS(ME)<sup>2</sup>.</strong>
+              MEWM-Agent cuts total-count MAE by 53.8% relative to Qwen3-VL-30B (3.554 vs. 7.687), achieves an ME-count MAE of 0.446, and lifts end-to-end STRS to 0.207 (1.92&times; the strongest baseline).
+            </p>
+            <div class="scp-table-wrap">
+              <table class="scp-results-table">
+                <thead>
+                  <tr>
+                    <th rowspan="2">Method</th>
+                    <th colspan="2">Total Count</th>
+                    <th colspan="2">ME Count</th>
+                    <th colspan="2">MaE Count</th>
+                    <th colspan="2">AU Set</th>
+                    <th colspan="3">End-to-End</th>
+                  </tr>
+                  <tr>
+                    <th>MAE&darr;</th><th>RMSE&darr;</th>
+                    <th>MAE&darr;</th><th>RMSE&darr;</th>
+                    <th>MAE&darr;</th><th>RMSE&darr;</th>
+                    <th>F1&uarr;</th><th>Jacc.&uarr;</th>
+                    <th>F1<sub>spot</sub>&uarr;</th><th>F1<sub>reg</sub><sup>TP</sup>&uarr;</th><th class="avg-col">STRS&uarr;</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="group-row"><td colspan="12">&#9679; <em>Closed-source MLLMs</em></td></tr>
+                  <tr><td>GPT-4o-mini</td><td>11.342</td><td>13.299</td><td>7.861</td><td>10.312</td><td>6.709</td><td>8.403</td><td>0.212</td><td>0.134</td><td>0.119</td><td>0.272</td><td class="avg-col">0.032</td></tr>
+                  <tr><td>GPT-4o</td><td>10.284</td><td>12.059</td><td>7.126</td><td>9.346</td><td>6.079</td><td>7.616</td><td>0.234</td><td>0.148</td><td>0.148</td><td>0.331</td><td class="avg-col">0.049</td></tr>
+                  <tr><td>Gemini-2.5-Flash</td><td>11.764</td><td>13.797</td><td>8.156</td><td>10.702</td><td>6.959</td><td>8.716</td><td>0.204</td><td>0.129</td><td>0.111</td><td>0.253</td><td class="avg-col">0.028</td></tr>
+                  <tr><td>Gemini-2.5-Pro</td><td>10.632</td><td>12.472</td><td>7.366</td><td>9.669</td><td>6.293</td><td>7.882</td><td>0.226</td><td>0.143</td><td>0.137</td><td>0.309</td><td class="avg-col">0.042</td></tr>
+                  <tr><td>Gemini-3-Flash</td><td>10.933</td><td>12.818</td><td>7.581</td><td>9.937</td><td>6.461</td><td>8.102</td><td>0.220</td><td>0.139</td><td>0.129</td><td>0.293</td><td class="avg-col">0.038</td></tr>
+                  <tr><td>Gemini-3-Pro</td><td>9.726</td><td>11.541</td><td>6.678</td><td>8.858</td><td>5.744</td><td>7.294</td><td>0.256</td><td>0.163</td><td>0.154</td><td>0.354</td><td class="avg-col">0.055</td></tr>
+                  <tr><td>Claude-Sonnet-4.5</td><td>10.497</td><td>12.313</td><td>7.279</td><td>9.549</td><td>6.211</td><td>7.779</td><td>0.229</td><td>0.145</td><td>0.142</td><td>0.317</td><td class="avg-col">0.045</td></tr>
+
+                  <tr class="group-row"><td colspan="12">&#9679; <em>Open-source MLLMs</em></td></tr>
+                  <tr><td>Qwen2.5-VL-7B</td><td>9.621</td><td>11.503</td><td>6.591</td><td>8.847</td><td>5.762</td><td>7.303</td><td>0.358</td><td>0.230</td><td>0.172</td><td>0.365</td><td class="avg-col">0.063</td></tr>
+                  <tr><td>Qwen2.5-Omni-7B</td><td>9.408</td><td>11.249</td><td>6.442</td><td>8.671</td><td>5.633</td><td>7.144</td><td>0.368</td><td>0.236</td><td>0.179</td><td>0.381</td><td class="avg-col">0.068</td></tr>
+                  <tr><td>Qwen2.5-VL-32B</td><td>8.431</td><td>10.127</td><td>5.763</td><td>7.814</td><td>4.998</td><td>6.398</td><td>0.401</td><td>0.257</td><td>0.213</td><td>0.439</td><td class="avg-col">0.093</td></tr>
+                  <tr><td>Qwen3-VL-8B</td><td>9.214</td><td>11.013</td><td>6.322</td><td>8.527</td><td>5.436</td><td>6.982</td><td>0.374</td><td>0.239</td><td>0.185</td><td>0.397</td><td class="avg-col">0.073</td></tr>
+                  <tr><td>Qwen3-VL-30B</td><td>7.687</td><td>9.341</td><td>5.194</td><td>7.218</td><td>4.541</td><td>5.869</td><td>0.436</td><td>0.281</td><td>0.224</td><td>0.482</td><td class="avg-col">0.108</td></tr>
+                  <tr><td>GLM-4.1V-9B</td><td>9.423</td><td>11.208</td><td>6.441</td><td>8.594</td><td>5.502</td><td>7.003</td><td>0.369</td><td>0.236</td><td>0.191</td><td>0.392</td><td class="avg-col">0.075</td></tr>
+
+                  <tr class="group-row"><td colspan="12">&#9679; <em>Proposed Emotional World Model Agents</em></td></tr>
+                  <tr class="teacher-row"><td>MEWM-Agent-T (Teacher)</td><td>2.891</td><td>3.987</td><td>0.371</td><td>0.784</td><td>2.543</td><td>3.419</td><td>0.524</td><td>0.371</td><td>0.397</td><td>0.613</td><td class="avg-col">0.243</td></tr>
+                  <tr class="ours-row"><td>MEWM-Agent (Ours)</td><td><span class="boxed-best">3.554</span></td><td><span class="boxed-best">4.749</span></td><td><span class="boxed-best">0.446</span></td><td><span class="boxed-best">0.927</span></td><td><span class="boxed-best">3.109</span></td><td><span class="boxed-best">4.163</span></td><td><span class="boxed-best">0.487</span></td><td><span class="boxed-best">0.341</span></td><td><span class="boxed-best">0.363</span></td><td><span class="boxed-best">0.571</span></td><td class="avg-col deep-cell">0.207</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Table VI: SAMM-LV -->
+          <div class="lvqa-tab-panel" data-dataset="sammlv" style="margin-bottom: 1.8rem;">
+            <p class="scp-table-caption">
+              <strong>Table VI: ME-LVQA Results of Event Counting, AU Set Prediction, and End-to-End Evaluation on SAMM-LV.</strong>
+              MEWM-Agent reduces total-count MAE by 52.7% relative to Qwen3-VL-30B and achieves an STRS of 0.164 (2.13&times; the strongest baseline).
+            </p>
+            <div class="scp-table-wrap">
+              <table class="scp-results-table">
+                <thead>
+                  <tr>
+                    <th rowspan="2">Method</th>
+                    <th colspan="2">Total Count</th>
+                    <th colspan="2">ME Count</th>
+                    <th colspan="2">MaE Count</th>
+                    <th colspan="2">AU Set</th>
+                    <th colspan="3">End-to-End</th>
+                  </tr>
+                  <tr>
+                    <th>MAE&darr;</th><th>RMSE&darr;</th>
+                    <th>MAE&darr;</th><th>RMSE&darr;</th>
+                    <th>MAE&darr;</th><th>RMSE&darr;</th>
+                    <th>F1&uarr;</th><th>Jacc.&uarr;</th>
+                    <th>F1<sub>spot</sub>&uarr;</th><th>F1<sub>reg</sub><sup>TP</sup>&uarr;</th><th class="avg-col">STRS&uarr;</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="group-row"><td colspan="12">&#9679; <em>Closed-source MLLMs</em></td></tr>
+                  <tr><td>GPT-4o-mini</td><td>11.743</td><td>13.742</td><td>8.137</td><td>10.618</td><td>6.928</td><td>8.663</td><td>0.198</td><td>0.124</td><td>0.097</td><td>0.253</td><td class="avg-col">0.025</td></tr>
+                  <tr><td>GPT-4o</td><td>10.636</td><td>12.446</td><td>7.382</td><td>9.621</td><td>6.277</td><td>7.853</td><td>0.218</td><td>0.137</td><td>0.122</td><td>0.308</td><td class="avg-col">0.038</td></tr>
+                  <tr><td>Gemini-2.5-Flash</td><td>12.167</td><td>14.242</td><td>8.444</td><td>11.001</td><td>7.179</td><td>8.978</td><td>0.190</td><td>0.120</td><td>0.091</td><td>0.235</td><td class="avg-col">0.021</td></tr>
+                  <tr><td>Gemini-2.5-Pro</td><td>11.002</td><td>12.867</td><td>7.629</td><td>9.954</td><td>6.489</td><td>8.108</td><td>0.211</td><td>0.132</td><td>0.113</td><td>0.288</td><td class="avg-col">0.033</td></tr>
+                  <tr><td>Gemini-3-Flash</td><td>11.311</td><td>13.233</td><td>7.837</td><td>10.217</td><td>6.673</td><td>8.339</td><td>0.205</td><td>0.129</td><td>0.106</td><td>0.273</td><td class="avg-col">0.029</td></tr>
+                  <tr><td>Gemini-3-Pro</td><td>10.057</td><td>11.869</td><td>6.918</td><td>9.146</td><td>5.921</td><td>7.469</td><td>0.241</td><td>0.152</td><td>0.130</td><td>0.314</td><td class="avg-col">0.041</td></tr>
+                  <tr><td>Claude-Sonnet-4.5</td><td>10.873</td><td>12.723</td><td>7.543</td><td>9.822</td><td>6.407</td><td>8.019</td><td>0.213</td><td>0.134</td><td>0.118</td><td>0.295</td><td class="avg-col">0.035</td></tr>
+
+                  <tr class="group-row"><td colspan="12">&#9679; <em>Open-source MLLMs</em></td></tr>
+                  <tr><td>Qwen2.5-VL-7B</td><td>9.984</td><td>11.902</td><td>6.873</td><td>9.147</td><td>5.908</td><td>7.531</td><td>0.341</td><td>0.218</td><td>0.144</td><td>0.319</td><td class="avg-col">0.046</td></tr>
+                  <tr><td>Qwen2.5-Omni-7B</td><td>9.772</td><td>11.627</td><td>6.724</td><td>8.941</td><td>5.773</td><td>7.362</td><td>0.349</td><td>0.224</td><td>0.151</td><td>0.334</td><td class="avg-col">0.050</td></tr>
+                  <tr><td>Qwen2.5-VL-32B</td><td>8.817</td><td>10.543</td><td>6.029</td><td>8.146</td><td>5.212</td><td>6.643</td><td>0.383</td><td>0.246</td><td>0.178</td><td>0.386</td><td class="avg-col">0.068</td></tr>
+                  <tr><td>Qwen3-VL-8B</td><td>9.631</td><td>11.449</td><td>6.613</td><td>8.814</td><td>5.681</td><td>7.246</td><td>0.356</td><td>0.228</td><td>0.156</td><td>0.347</td><td class="avg-col">0.055</td></tr>
+                  <tr><td>Qwen3-VL-30B</td><td>8.049</td><td>9.726</td><td>5.487</td><td>7.512</td><td>4.784</td><td>6.114</td><td>0.418</td><td>0.268</td><td>0.185</td><td>0.419</td><td class="avg-col">0.077</td></tr>
+                  <tr><td>GLM-4.1V-9B</td><td>9.817</td><td>11.601</td><td>6.728</td><td>8.892</td><td>5.742</td><td>7.271</td><td>0.348</td><td>0.223</td><td>0.162</td><td>0.352</td><td class="avg-col">0.057</td></tr>
+
+                  <tr class="group-row"><td colspan="12">&#9679; <em>Proposed Emotional World Model Agents</em></td></tr>
+                  <tr class="teacher-row"><td>MEWM-Agent-T (Teacher)</td><td>3.112</td><td>4.213</td><td>0.428</td><td>0.892</td><td>2.694</td><td>3.521</td><td>0.498</td><td>0.349</td><td>0.347</td><td>0.564</td><td class="avg-col">0.196</td></tr>
+                  <tr class="ours-row"><td>MEWM-Agent (Ours)</td><td><span class="boxed-best">3.804</span></td><td><span class="boxed-best">5.106</span></td><td><span class="boxed-best">0.512</span></td><td><span class="boxed-best">1.083</span></td><td><span class="boxed-best">3.292</span></td><td><span class="boxed-best">4.397</span></td><td><span class="boxed-best">0.461</span></td><td><span class="boxed-best">0.318</span></td><td><span class="boxed-best">0.314</span></td><td><span class="boxed-best">0.521</span></td><td class="avg-col deep-cell">0.164</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Table VII: CAS(ME)^3 -->
+          <div class="lvqa-tab-panel" data-dataset="casme3" style="margin-bottom: 1.8rem;">
+            <p class="scp-table-caption">
+              <strong>Table VII: ME-LVQA Results of Event Counting, AU Set Prediction, and End-to-End Evaluation on CAS(ME)<sup>3</sup>.</strong>
+              On the large-scale CAS(ME)<sup>3</sup> corpus, MEWM-Agent cuts total-count MAE by 46.3% and elevates STRS to 0.154 (2.33&times; the strongest baseline).
+            </p>
+            <div class="scp-table-wrap">
+              <table class="scp-results-table">
+                <thead>
+                  <tr>
+                    <th rowspan="2">Method</th>
+                    <th colspan="2">Total Count</th>
+                    <th colspan="2">ME Count</th>
+                    <th colspan="2">MaE Count</th>
+                    <th colspan="2">AU Set</th>
+                    <th colspan="3">End-to-End</th>
+                  </tr>
+                  <tr>
+                    <th>MAE&darr;</th><th>RMSE&darr;</th>
+                    <th>MAE&darr;</th><th>RMSE&darr;</th>
+                    <th>MAE&darr;</th><th>RMSE&darr;</th>
+                    <th>F1&uarr;</th><th>Jacc.&uarr;</th>
+                    <th>F1<sub>spot</sub>&uarr;</th><th>F1<sub>reg</sub><sup>TP</sup>&uarr;</th><th class="avg-col">STRS&uarr;</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="group-row"><td colspan="12">&#9679; <em>Closed-source MLLMs</em></td></tr>
+                  <tr><td>GPT-4o-mini</td><td>13.943</td><td>17.013</td><td>9.642</td><td>12.461</td><td>8.124</td><td>10.066</td><td>0.197</td><td>0.123</td><td>0.087</td><td>0.228</td><td class="avg-col">0.020</td></tr>
+                  <tr><td>GPT-4o</td><td>12.641</td><td>15.423</td><td>8.742</td><td>11.291</td><td>7.359</td><td>9.128</td><td>0.217</td><td>0.136</td><td>0.110</td><td>0.277</td><td class="avg-col">0.030</td></tr>
+                  <tr><td>Gemini-2.5-Flash</td><td>14.464</td><td>17.643</td><td>10.002</td><td>12.918</td><td>8.418</td><td>10.439</td><td>0.190</td><td>0.119</td><td>0.083</td><td>0.212</td><td class="avg-col">0.018</td></tr>
+                  <tr><td>Gemini-2.5-Pro</td><td>13.074</td><td>15.943</td><td>9.037</td><td>11.683</td><td>7.608</td><td>9.443</td><td>0.210</td><td>0.132</td><td>0.103</td><td>0.259</td><td class="avg-col">0.027</td></tr>
+                  <tr><td>Gemini-3-Flash</td><td>13.426</td><td>16.379</td><td>9.279</td><td>12.004</td><td>7.819</td><td>9.701</td><td>0.204</td><td>0.128</td><td>0.097</td><td>0.245</td><td class="avg-col">0.024</td></tr>
+                  <tr><td>Gemini-3-Pro</td><td>11.846</td><td>14.627</td><td>8.174</td><td>10.636</td><td>6.869</td><td>8.558</td><td>0.239</td><td>0.151</td><td>0.119</td><td>0.291</td><td class="avg-col">0.035</td></tr>
+                  <tr><td>Claude-Sonnet-4.5</td><td>12.909</td><td>15.749</td><td>8.921</td><td>11.532</td><td>7.516</td><td>9.329</td><td>0.212</td><td>0.133</td><td>0.107</td><td>0.265</td><td class="avg-col">0.028</td></tr>
+
+                  <tr class="group-row"><td colspan="12">&#9679; <em>Open-source MLLMs</em></td></tr>
+                  <tr><td>Qwen2.5-VL-7B</td><td>12.193</td><td>15.231</td><td>8.413</td><td>11.027</td><td>7.064</td><td>8.847</td><td>0.336</td><td>0.216</td><td>0.131</td><td>0.319</td><td class="avg-col">0.042</td></tr>
+                  <tr><td>Qwen2.5-Omni-7B</td><td>11.914</td><td>14.902</td><td>8.227</td><td>10.794</td><td>6.903</td><td>8.643</td><td>0.344</td><td>0.221</td><td>0.138</td><td>0.332</td><td class="avg-col">0.046</td></tr>
+                  <tr><td>Qwen2.5-VL-32B</td><td>10.831</td><td>13.559</td><td>7.447</td><td>9.782</td><td>6.281</td><td>7.851</td><td>0.378</td><td>0.243</td><td>0.154</td><td>0.368</td><td class="avg-col">0.059</td></tr>
+                  <tr><td>Qwen3-VL-8B</td><td>11.689</td><td>14.633</td><td>8.074</td><td>10.584</td><td>6.782</td><td>8.487</td><td>0.349</td><td>0.224</td><td>0.142</td><td>0.346</td><td class="avg-col">0.048</td></tr>
+                  <tr><td>Qwen3-VL-30B</td><td>9.892</td><td>12.491</td><td>6.803</td><td>9.041</td><td>5.773</td><td>7.243</td><td>0.414</td><td>0.265</td><td>0.167</td><td>0.396</td><td class="avg-col">0.066</td></tr>
+                  <tr><td>GLM-4.1V-9B</td><td>12.287</td><td>15.089</td><td>8.492</td><td>11.137</td><td>7.126</td><td>8.913</td><td>0.342</td><td>0.219</td><td>0.146</td><td>0.324</td><td class="avg-col">0.046</td></tr>
+
+                  <tr class="group-row"><td colspan="12">&#9679; <em>Proposed Emotional World Model Agents</em></td></tr>
+                  <tr class="teacher-row"><td>MEWM-Agent-T (Teacher)</td><td>4.319</td><td>5.724</td><td>0.451</td><td>0.946</td><td>3.927</td><td>4.968</td><td>0.453</td><td>0.305</td><td>0.312</td><td>0.589</td><td class="avg-col">0.184</td></tr>
+                  <tr class="ours-row"><td>MEWM-Agent (Ours)</td><td><span class="boxed-best">5.317</span></td><td><span class="boxed-best">6.982</span></td><td><span class="boxed-best">0.538</span></td><td><span class="boxed-best">1.124</span></td><td><span class="boxed-best">4.793</span></td><td><span class="boxed-best">6.041</span></td><td><span class="boxed-best">0.418</span></td><td><span class="boxed-best">0.286</span></td><td><span class="boxed-best">0.281</span></td><td><span class="boxed-best">0.547</span></td><td class="avg-col deep-cell">0.154</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Table VIII: 4DME -->
+          <div class="lvqa-tab-panel" data-dataset="4dme">
+            <p class="scp-table-caption">
+              <strong>Table VIII: ME-LVQA Results of Event Counting, AU Set Prediction, and End-to-End Evaluation on 4DME.</strong>
+              MEWM-Agent reduces total-count MAE by 41.3% relative to Qwen3-VL-30B and achieves an STRS of 0.129 (2.22&times; the strongest baseline).
+            </p>
+            <div class="scp-table-wrap">
+              <table class="scp-results-table">
+                <thead>
+                  <tr>
+                    <th rowspan="2">Method</th>
+                    <th colspan="2">Total Count</th>
+                    <th colspan="2">ME Count</th>
+                    <th colspan="2">MaE Count</th>
+                    <th colspan="2">AU Set</th>
+                    <th colspan="3">End-to-End</th>
+                  </tr>
+                  <tr>
+                    <th>MAE&darr;</th><th>RMSE&darr;</th>
+                    <th>MAE&darr;</th><th>RMSE&darr;</th>
+                    <th>MAE&darr;</th><th>RMSE&darr;</th>
+                    <th>F1&uarr;</th><th>Jacc.&uarr;</th>
+                    <th>F1<sub>spot</sub>&uarr;</th><th>F1<sub>reg</sub><sup>TP</sup>&uarr;</th><th class="avg-col">STRS&uarr;</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="group-row"><td colspan="12">&#9679; <em>Closed-source MLLMs</em></td></tr>
+                  <tr><td>GPT-4o-mini</td><td>11.123</td><td>13.099</td><td>7.764</td><td>10.189</td><td>6.572</td><td>8.247</td><td>0.182</td><td>0.114</td><td>0.081</td><td>0.217</td><td class="avg-col">0.018</td></tr>
+                  <tr><td>GPT-4o</td><td>10.081</td><td>11.869</td><td>7.032</td><td>9.239</td><td>5.948</td><td>7.477</td><td>0.201</td><td>0.126</td><td>0.103</td><td>0.264</td><td class="avg-col">0.027</td></tr>
+                  <tr><td>Gemini-2.5-Flash</td><td>11.528</td><td>13.584</td><td>8.037</td><td>10.567</td><td>6.814</td><td>8.557</td><td>0.176</td><td>0.110</td><td>0.077</td><td>0.202</td><td class="avg-col">0.016</td></tr>
+                  <tr><td>Gemini-2.5-Pro</td><td>10.416</td><td>12.273</td><td>7.271</td><td>9.563</td><td>6.154</td><td>7.742</td><td>0.194</td><td>0.122</td><td>0.096</td><td>0.247</td><td class="avg-col">0.024</td></tr>
+                  <tr><td>Gemini-3-Flash</td><td>10.709</td><td>12.619</td><td>7.467</td><td>9.823</td><td>6.323</td><td>7.946</td><td>0.189</td><td>0.119</td><td>0.090</td><td>0.234</td><td class="avg-col">0.021</td></tr>
+                  <tr><td>Gemini-3-Pro</td><td>9.536</td><td>11.317</td><td>6.551</td><td>8.734</td><td>5.618</td><td>7.153</td><td>0.223</td><td>0.140</td><td>0.110</td><td>0.277</td><td class="avg-col">0.030</td></tr>
+                  <tr><td>Claude-Sonnet-4.5</td><td>10.292</td><td>12.118</td><td>7.183</td><td>9.444</td><td>6.081</td><td>7.641</td><td>0.197</td><td>0.123</td><td>0.099</td><td>0.253</td><td class="avg-col">0.025</td></tr>
+
+                  <tr class="group-row"><td colspan="12">&#9679; <em>Open-source MLLMs</em></td></tr>
+                  <tr><td>Qwen2.5-VL-7B</td><td>9.437</td><td>11.348</td><td>6.482</td><td>8.761</td><td>5.594</td><td>7.151</td><td>0.329</td><td>0.210</td><td>0.119</td><td>0.281</td><td class="avg-col">0.034</td></tr>
+                  <tr><td>Qwen2.5-Omni-7B</td><td>9.228</td><td>11.092</td><td>6.329</td><td>8.573</td><td>5.467</td><td>6.983</td><td>0.337</td><td>0.216</td><td>0.125</td><td>0.294</td><td class="avg-col">0.037</td></tr>
+                  <tr><td>Qwen2.5-VL-32B</td><td>8.312</td><td>9.987</td><td>5.671</td><td>7.741</td><td>4.894</td><td>6.279</td><td>0.371</td><td>0.238</td><td>0.149</td><td>0.338</td><td class="avg-col">0.050</td></tr>
+                  <tr><td>Qwen3-VL-8B</td><td>9.081</td><td>10.913</td><td>6.218</td><td>8.426</td><td>5.351</td><td>6.849</td><td>0.343</td><td>0.220</td><td>0.130</td><td>0.304</td><td class="avg-col">0.039</td></tr>
+                  <tr><td>Qwen3-VL-30B</td><td>7.621</td><td>9.283</td><td>5.147</td><td>7.124</td><td>4.481</td><td>5.808</td><td>0.381</td><td>0.244</td><td>0.158</td><td>0.367</td><td class="avg-col">0.058</td></tr>
+                  <tr><td>GLM-4.1V-9B</td><td>9.264</td><td>11.047</td><td>6.341</td><td>8.489</td><td>5.412</td><td>6.891</td><td>0.335</td><td>0.214</td><td>0.134</td><td>0.305</td><td class="avg-col">0.040</td></tr>
+
+                  <tr class="group-row"><td colspan="12">&#9679; <em>Proposed Emotional World Model Agents</em></td></tr>
+                  <tr class="teacher-row"><td>MEWM-Agent-T (Teacher)</td><td>3.627</td><td>4.819</td><td>0.483</td><td>1.014</td><td>3.198</td><td>3.993</td><td>0.428</td><td>0.289</td><td>0.284</td><td>0.551</td><td class="avg-col">0.156</td></tr>
+                  <tr class="ours-row"><td>MEWM-Agent (Ours)</td><td><span class="boxed-best">4.469</span></td><td><span class="boxed-best">5.915</span></td><td><span class="boxed-best">0.573</span></td><td><span class="boxed-best">1.197</span></td><td><span class="boxed-best">3.901</span></td><td><span class="boxed-best">4.827</span></td><td><span class="boxed-best">0.392</span></td><td><span class="boxed-best">0.264</span></td><td><span class="boxed-best">0.253</span></td><td><span class="boxed-best">0.509</span></td><td class="avg-col deep-cell">0.129</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task-Level Comparison Figure (task_level_mewm_agent.png) -->
+        <div class="content has-text-justified" style="max-width: 1120px; margin: 2rem auto 0;">
+          <h3 class="subsection-heading">Comparison Across Task Complexity Levels</h3>
+          <p>
+            <strong>Compounding Advantages from Spotting to QA.</strong> Evaluating performance across Level 1 (ME Spotting), Level 2 (Interval Emotion Understanding &amp; Text Generation), and Level 3 (End-to-End ME-LVQA) reveals that MEWM-Agent's margin widens progressively with task complexity. Through On-Policy Distillation, our 7B student surpasses 30B/32B open-source backbones and proprietary MLLMs across all ten metrics, achieving 1.92&times;&ndash;2.33&times; higher composite STRS across the four benchmarks.
+          </p>
+        </div>
+
+        <figure class="image paper-figure" style="max-width: 1200px; margin: 0.9rem auto 1.2rem;">
+          <img src="static/images/task_level_mewm_agent.png" alt="Task-level comparison of MEWM-Agent and MLLM baselines on CAS(ME)² across three evaluation levels" loading="lazy" style="display: block; width: 100%; height: auto;">
+          <p class="figure-note"><strong>Task-level comparison of MEWM-Agent and MLLM baselines on CAS(ME)<sup>2</sup> across three evaluation levels:</strong> Level 1 (long-video ME spotting), Level 2 (ME understanding and causal description), and Level 3 (end-to-end ME-LVQA). MEWM-Agent achieves the best results on all ten metrics.</p>
+        </figure>
+
+        <div class="key-takeaways">
+          <p class="takeaways-title">Key Experimental Takeaways</p>
+          <ul>
+            <li>Subject-specific predictive dynamics, rather than raw parameter scale, overcome the MaE/ME imbalance and enable a 7B student to outperform 30B+ MLLMs on subtle ME spotting.</li>
+            <li>AU-anchored descriptions yield 1.39&times; higher BLEU than Qwen3-VL-30B on CAS(ME)<sup>2</sup> and markedly reduce GT-to-TP recognition degradation.</li>
+            <li>Verified spotting and AU-graph filtering compound in ME-LVQA, cutting ME counting MAE to 0.446&ndash;0.573 and delivering 1.92&times;&ndash;2.33&times; higher STRS across all four datasets.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- End Main Experimental Results -->
+
+    <!-- Ablation Studies, Hyperparameters & WAEPO Optimization (Tables IX - XIII) -->
+    <section class="section hero is-light">
+      <div class="container is-max-widescreen">
+        <h2 class="title is-3 has-text-centered" id="ablation-and-optimization">What Drives MEWM-Agent? Ablation &amp; WAEPO Analysis</h2>
+
+        <!-- Table IX: Training Objectives Ablation -->
+        <div class="scp-table-block">
+          <h3 class="subsection-heading" style="margin-top: 0 !important;">Ablation of Training Objectives</h3>
+          <p class="scp-table-caption">
+            <strong>Table IX: Incremental and Leave-One-Out Ablation of Training Objectives on CAS(ME)<sup>2</sup>.</strong>
+            <code>&#x2112;<sub>srp</sub></code> covers state representation and dynamics pretraining; <code>&#x2112;<sub>emo</sub></code>, <code>&#x2112;<sub>teacher</sub></code>, and <code>&#x2112;<sub>student</sub></code> denote emotion supervision, the SITT teacher alignment loss, and the WAEPO student policy loss, respectively.
+          </p>
+          <div class="scp-table-wrap">
+            <table class="scp-results-table">
+              <thead>
+                <tr>
+                  <th style="text-align: center;">&#x2112;<sub>srp</sub></th>
+                  <th>&#x2112;<sub>emo</sub></th>
+                  <th>&#x2112;<sub>teacher</sub></th>
+                  <th>&#x2112;<sub>student</sub></th>
+                  <th>F1<sub>spot</sub>&uarr;</th>
+                  <th>F1<sub>reg</sub><sup>TP</sup>&uarr;</th>
+                  <th>UAR<sub>reg</sub><sup>TP</sup>&uarr;</th>
+                  <th>AU F1&uarr;</th>
+                  <th>Jacc.&uarr;</th>
+                  <th>MAE&darr;</th>
+                  <th>RMSE&darr;</th>
+                  <th>BL&uarr;</th>
+                  <th>RL&uarr;</th>
+                  <th class="avg-col">STRS&uarr;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="group-row"><td colspan="14">&#9679; <em>Incremental Addition</em></td></tr>
+                <tr><td style="text-align: center;">&times;</td><td>&times;</td><td>&times;</td><td>&times;</td><td>0.288</td><td>0.330</td><td>0.320</td><td>0.370</td><td>0.251</td><td>0.751</td><td>1.550</td><td>0.208</td><td>0.345</td><td class="avg-col">0.095</td></tr>
+                <tr><td style="text-align: center;">&#10003;</td><td>&times;</td><td>&times;</td><td>&times;</td><td>0.338</td><td>0.385</td><td>0.380</td><td>0.444</td><td>0.308</td><td>0.578</td><td>1.182</td><td>0.239</td><td>0.384</td><td class="avg-col">0.130</td></tr>
+                <tr><td style="text-align: center;">&#10003;</td><td>&#10003;</td><td>&times;</td><td>&times;</td><td>0.355</td><td>0.458</td><td>0.468</td><td>0.452</td><td>0.315</td><td>0.539</td><td>1.111</td><td>0.270</td><td>0.416</td><td class="avg-col">0.163</td></tr>
+                <tr><td style="text-align: center;">&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>&times;</td><td>0.358</td><td>0.509</td><td>0.496</td><td>0.469</td><td>0.328</td><td>0.487</td><td>1.014</td><td>0.278</td><td>0.423</td><td class="avg-col">0.182</td></tr>
+
+                <tr class="group-row"><td colspan="14">&#9679; <em>Leave-One-Out &amp; Full Model</em></td></tr>
+                <tr><td style="text-align: center;">&times;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>0.339</td><td>0.479</td><td>0.494</td><td>0.468</td><td>0.328</td><td>0.564</td><td>1.147</td><td>0.274</td><td>0.419</td><td class="avg-col">0.162</td></tr>
+                <tr><td style="text-align: center;">&#10003;</td><td>&times;</td><td>&#10003;</td><td>&#10003;</td><td>0.352</td><td>0.449</td><td>0.463</td><td>0.476</td><td>0.334</td><td>0.518</td><td>1.071</td><td>0.271</td><td>0.415</td><td class="avg-col">0.158</td></tr>
+                <tr><td style="text-align: center;">&#10003;</td><td>&#10003;</td><td>&times;</td><td>&#10003;</td><td>0.360</td><td>0.527</td><td>0.513</td><td>0.481</td><td>0.337</td><td>0.463</td><td>0.968</td><td>0.282</td><td>0.427</td><td class="avg-col">0.190</td></tr>
+                <tr><td style="text-align: center;">&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>&times;</td><td>0.358</td><td>0.509</td><td>0.496</td><td>0.469</td><td>0.328</td><td>0.487</td><td>1.014</td><td>0.278</td><td>0.423</td><td class="avg-col">0.182</td></tr>
+                <tr class="ours-row">
+                  <td style="text-align: center;">&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td>
+                  <td><span class="boxed-best">0.363</span></td><td><span class="boxed-best">0.571</span></td><td><span class="boxed-best">0.528</span></td><td><span class="boxed-best">0.487</span></td><td><span class="boxed-best">0.341</span></td><td><span class="boxed-best">0.446</span></td><td><span class="boxed-best">0.927</span></td><td><span class="boxed-best">0.287</span></td><td><span class="boxed-best">0.431</span></td><td class="avg-col deep-cell">0.207</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="scp-table-footnote">
+            Note: &#10003;/&times; indicate whether an objective is enabled. MAE and RMSE are ME counting errors. BL: BLEU; RL: ROUGE-L.
+          </p>
+        </div>
+
+        <!-- Tables X & XI Side-by-Side: Critic Heterogeneity & Memory Ablation -->
+        <div class="columns is-desktop is-variable is-5" style="margin-bottom: 1.5rem;">
+          <div class="column is-6">
+            <h3 class="subsection-heading" style="margin-top: 0 !important;">Heterogeneous Critic Base</h3>
+            <p class="scp-table-caption">
+              <strong>Table X: Ablation of the Critic-Verification Base Model.</strong>
+              Replacing a shared Qwen2.5-VL-7B critic with heterogeneous GLM-4.1V-9B-Thinking prevents shared inductive bias and lifts F1<sub>reg</sub><sup>TP</sup> by +0.107.
+            </p>
+            <div class="scp-table-wrap">
+              <table class="scp-results-table">
+                <thead>
+                  <tr>
+                    <th>Critic Base</th>
+                    <th>F1<sub>spot</sub>&uarr;</th>
+                    <th>F1<sub>reg</sub><sup>GT</sup>&uarr;</th>
+                    <th>F1<sub>reg</sub><sup>TP</sup>&uarr;</th>
+                    <th class="avg-col">STRS&uarr;</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Qwen2.5-VL-7B (Homogeneous)</td>
+                    <td>0.350</td><td>0.613</td><td>0.464</td><td class="avg-col">0.162</td>
+                  </tr>
+                  <tr class="ours-row">
+                    <td>GLM-4.1V-9B-Thinking (Heterogeneous)</td>
+                    <td><span class="boxed-best">0.363</span></td><td><span class="boxed-best">0.641</span></td><td><span class="boxed-best">0.571</span></td><td class="avg-col deep-cell">0.207</td>
+                  </tr>
+                  <tr class="teacher-row">
+                    <td>Gain of heterogeneous base</td>
+                    <td>+0.013</td><td>+0.028</td><td>+0.107</td><td class="avg-col">+0.045</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="column is-6">
+            <h3 class="subsection-heading" style="margin-top: 0 !important;">Four-Layer Memory Ablation</h3>
+            <p class="scp-table-caption">
+              <strong>Table XI: Ablation of the Memory Components on CAS(ME)<sup>2</sup>.</strong>
+              Removing episodic memory &#x1D53C; causes the largest STRS drop (&minus;0.064), while semantic memory &#x1D54A; governs GT emotion discrimination.
+            </p>
+            <div class="scp-table-wrap">
+              <table class="scp-results-table">
+                <thead>
+                  <tr>
+                    <th style="text-align: center;">&#x1D54E;</th>
+                    <th>&#x1D53C;</th>
+                    <th>&#x1D54A;</th>
+                    <th>&#x1D53E;</th>
+                    <th>F1<sub>spot</sub>&uarr;</th>
+                    <th>F1<sub>reg</sub><sup>GT</sup>&uarr;</th>
+                    <th>F1<sub>reg</sub><sup>TP</sup>&uarr;</th>
+                    <th class="avg-col">STRS&uarr;</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td style="text-align: center;">&times;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>0.341</td><td>0.621</td><td>0.465</td><td class="avg-col">0.159</td></tr>
+                  <tr><td style="text-align: center;">&#10003;</td><td>&times;</td><td>&#10003;</td><td>&#10003;</td><td>0.320</td><td>0.610</td><td>0.448</td><td class="avg-col">0.143</td></tr>
+                  <tr><td style="text-align: center;">&#10003;</td><td>&#10003;</td><td>&times;</td><td>&#10003;</td><td>0.357</td><td>0.591</td><td>0.451</td><td class="avg-col">0.161</td></tr>
+                  <tr><td style="text-align: center;">&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>&times;</td><td>0.361</td><td>0.631</td><td>0.481</td><td class="avg-col">0.174</td></tr>
+                  <tr class="ours-row">
+                    <td style="text-align: center;">&#10003;</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td>
+                    <td><span class="boxed-best">0.363</span></td><td><span class="boxed-best">0.641</span></td><td><span class="boxed-best">0.571</span></td><td class="avg-col deep-cell">0.207</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tables XII & XIII: Hyperparameter Sensitivity & WAEPO RL Comparison -->
+        <h3 class="subsection-heading">WAEPO Policy Optimization &amp; Hyperparameter Sensitivity (Tables XII &amp; XIII)</h3>
+        <div class="content has-text-justified" style="max-width: 1120px; margin: 0 auto 1.2rem;">
+          <p>
+            <strong>Eliminating Advantage Inversion via On-Policy Distillation.</strong> Mixing high-reward anchor trajectories directly into group normalization inflates the baseline and inverts advantages for 22.4% of on-policy samples (V1), suppressing exploration. By computing advantage baselines exclusively from student samples, routing SITT-aligned teacher trajectories through a decoupled likelihood term with bounded teacher ratio <code>G<sub>t</sub> / G &lt; 1</code>, and enforcing PRE-derived cascaded rewards, <strong>WAEPO</strong> reduces advantage inversion <code>&eta;<sub>inv</sub></code> to <strong>0.3%</strong> (vs. 19.7% in GRPO and 10.9% in P-GRPO) while achieving peak end-to-end performance at <code>G = 16, G<sub>t</sub> = 8</code> (STRS = <strong>0.207</strong>).
+          </p>
+        </div>
+
+        <div class="columns is-desktop is-variable is-5" style="align-items: flex-start;">
+          <!-- Table XII: Group Size G & Teacher Trajectory Count G_t -->
+          <div class="column is-6">
+            <p class="scp-table-caption">
+              <strong>Table XII: Sensitivity to the Online Group Size <em>G</em> and the Teacher Trajectory Count <em>G<sub>t</sub></em> with <em>G<sub>t</sub> &le; G</em> on CAS(ME)<sup>2</sup>.</strong>
+              Peak performance occurs at <code>G = 16, G<sub>t</sub> = 8</code> (<code>G<sub>t</sub>/G = 0.50</code>), whereas <code>G<sub>t</sub> = G</code> degrades STRS due to off-policy gradient dominance.
+            </p>
+            <div class="scp-table-wrap">
+              <table class="scp-results-table">
+                <thead>
+                  <tr>
+                    <th style="text-align: center;"><em>G</em></th>
+                    <th><em>G<sub>t</sub></em></th>
+                    <th><em>G<sub>t</sub> / G</em></th>
+                    <th>F1<sub>spot</sub>&uarr;</th>
+                    <th>F1<sub>reg</sub><sup>GT</sup>&uarr;</th>
+                    <th>F1<sub>reg</sub><sup>TP</sup>&uarr;</th>
+                    <th class="avg-col">STRS&uarr;</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td rowspan="2" style="text-align: center; font-weight: 700;">4</td><td>2</td><td>0.50</td><td>0.356</td><td>0.609</td><td>0.460</td><td class="avg-col">0.164</td></tr>
+                  <tr><td>4</td><td>1.00</td><td>0.357</td><td>0.615</td><td>0.467</td><td class="avg-col">0.167</td></tr>
+
+                  <tr><td rowspan="3" style="text-align: center; font-weight: 700; background: #f8fafc;">8</td><td>2</td><td>0.25</td><td>0.359</td><td>0.634</td><td>0.488</td><td class="avg-col">0.174</td></tr>
+                  <tr><td>4</td><td>0.50</td><td>0.360</td><td>0.631</td><td>0.485</td><td class="avg-col">0.172</td></tr>
+                  <tr><td>8</td><td>1.00</td><td>0.356</td><td>0.620</td><td>0.472</td><td class="avg-col">0.168</td></tr>
+
+                  <tr><td rowspan="4" style="text-align: center; font-weight: 700;">16</td><td>2</td><td>0.13</td><td>0.360</td><td>0.633</td><td>0.487</td><td class="avg-col">0.173</td></tr>
+                  <tr><td>4</td><td>0.25</td><td>0.361</td><td>0.637</td><td>0.491</td><td class="avg-col">0.176</td></tr>
+                  <tr class="ours-row">
+                    <td>8</td><td>0.50</td>
+                    <td><span class="boxed-best">0.363</span></td><td><span class="boxed-best">0.641</span></td><td><span class="boxed-best">0.571</span></td><td class="avg-col deep-cell">0.207</td>
+                  </tr>
+                  <tr><td>16</td><td>1.00</td><td>0.358</td><td>0.623</td><td>0.475</td><td class="avg-col">0.169</td></tr>
+
+                  <tr><td rowspan="4" style="text-align: center; font-weight: 700; background: #f8fafc;">32</td><td>2</td><td>0.06</td><td>0.358</td><td>0.629</td><td>0.482</td><td class="avg-col">0.171</td></tr>
+                  <tr><td>4</td><td>0.13</td><td>0.360</td><td>0.636</td><td>0.490</td><td class="avg-col">0.175</td></tr>
+                  <tr><td>8</td><td>0.25</td><td>0.361</td><td>0.639</td><td>0.493</td><td class="avg-col">0.178</td></tr>
+                  <tr><td>16</td><td>0.50</td><td>0.359</td><td>0.632</td><td>0.488</td><td class="avg-col">0.174</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Table XIII: WAEPO Variants & RL Baselines -->
+          <div class="column is-6">
+            <p class="scp-table-caption">
+              <strong>Table XIII: Comparison of WAEPO variants V1&ndash;V3 and RL baselines GRPO, PPO, DAPO, P-GRPO, and OPD on CAS(ME)<sup>2</sup>.</strong>
+              <code>&eta;<sub>inv</sub> (%)</code> denotes the advantage inversion rate (lower is better). WAEPO (V3) cuts inversion to 0.3% and outperforms all RL baselines by +0.033 to +0.055 in STRS.
+            </p>
+            <div class="scp-table-wrap">
+              <table class="scp-results-table">
+                <thead>
+                  <tr>
+                    <th>Method</th>
+                    <th>F1<sub>spot</sub>&uarr;</th>
+                    <th>F1<sub>reg</sub><sup>TP</sup>&uarr;</th>
+                    <th class="avg-col">STRS&uarr;</th>
+                    <th>&eta;<sub>inv</sub> (%)&darr;</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="group-row"><td colspan="5">&#9679; <em>RL Method Comparison</em></td></tr>
+                  <tr><td>GRPO</td><td>0.355</td><td>0.474</td><td class="avg-col">0.168</td><td>19.7</td></tr>
+                  <tr><td>PPO</td><td>0.339</td><td>0.449</td><td class="avg-col">0.152</td><td>15.2</td></tr>
+                  <tr><td>DAPO</td><td>0.346</td><td>0.463</td><td class="avg-col">0.161</td><td>13.8</td></tr>
+                  <tr><td>P-GRPO</td><td>0.351</td><td>0.482</td><td class="avg-col">0.170</td><td>10.9</td></tr>
+                  <tr><td>OPD only</td><td>0.357</td><td>0.496</td><td class="avg-col">0.174</td><td>2.1</td></tr>
+
+                  <tr class="group-row"><td colspan="5">&#9679; <em>WAEPO Variants</em></td></tr>
+                  <tr><td>V1: Verified anchors only</td><td>0.355</td><td>0.474</td><td class="avg-col">0.168</td><td>22.4</td></tr>
+                  <tr><td>V2: + Decoupled baseline</td><td>0.357</td><td>0.496</td><td class="avg-col">0.174</td><td>2.1</td></tr>
+                  <tr class="ours-row">
+                    <td>V3: WAEPO (Ours)</td>
+                    <td><span class="boxed-best">0.363</span></td>
+                    <td><span class="boxed-best">0.571</span></td>
+                    <td class="avg-col deep-cell">0.207</td>
+                    <td><span class="boxed-best">0.3</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="key-takeaways" style="margin-top: 1.25rem;">
+              <p class="takeaways-title">Optimization Takeaways</p>
+              <ul>
+                <li>Student-only advantage baselines eliminate the 22.4% advantage inversion induced by naive anchor mixing.</li>
+                <li>Enforcing <code>G<sub>t</sub> / G &in; [0.25, 0.50]</code> balances teacher guidance with student on-policy exploration.</li>
+                <li>Cascaded PRE process rewards unlock +0.075 higher F1<sub>reg</sub><sup>TP</sup> over standalone OPD.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- End Ablation & WAEPO Section -->
+
+    <!-- End-to-End Qualitative Case Study (F4.png) -->
+    <section class="section">
+      <div class="container is-max-widescreen">
+        <h2 class="title is-3 has-text-centered" id="case-study">End-to-End Qualitative Case Study</h2>
+
+        <div class="content has-text-justified" style="max-width: 1080px; margin: 0 auto 1.2rem;">
+          <p>
+            <strong>Tracing Multi-Agent Collaboration &amp; Counterfactual Verification on a Long Video.</strong>
+            In <strong>Step 1</strong>, dual-threshold hysteresis on the decomposed statistic <code>S<sub>t</sub></code> detects five candidate segments, and boundary rescanning confirms three MEs (53.17&ndash;53.80 s, 61.60&ndash;62.10 s, 74.43&ndash;74.93 s) and two MaEs.
+            In <strong>Step 2</strong>, the perception agent isolates salient lateral-upward motion at the mouth corners and forwards magnitude&ndash;direction&ndash;coherence triplets to the structuring agent, which identifies an active <span class="au-verified">AU14</span> leading and inhibiting a weak left-sided <span class="au-weak">AU12</span>, matching the antagonism prototype in &#x1D54A;.
+            While static evidence slightly favors <span class="au-emotion">Happiness</span> from unilateral <span class="au-weak">AU12</span>, dynamic consistency favors <span class="au-emotion">Anger</span> (margin 0.09).
+            The critic-verification agent computes slot necessity (<span class="au-verified">AU14</span> MNI = 0.44) and triggers a counterfactual rollout comparison that rules out <span class="au-emotion">Happiness</span> due to missing <span class="au-fabricat">AU6</span> co-activation and an unsustained <span class="au-weak">AU12</span> apex.
+            In <strong>Step 3</strong>, global memory &#x1D53E; links all three frozen event nodes in &#x1D53C; to produce verified chains (<span class="au-verified">AU14</span> &rarr; <span class="au-weak">AU12</span> &rarr; <span class="au-emotion">Anger</span> for the 1st and 3rd MEs; <span class="au-verified">AU2</span> &rarr; <span class="au-weak">AU4</span> &rarr; <span class="au-emotion">Others</span> for the 2nd ME), matching ground-truth annotations.
+          </p>
+        </div>
+
+        <figure class="image paper-figure" style="max-width: 1140px; margin: 0.8rem auto 1.2rem;">
+          <img src="static/images/F4.png" alt="End-to-end case of MEWM-Agent on a long video showing Step 1 spotting, Step 2 multi-agent interaction with memory, and Step 3 final prediction report" loading="lazy" style="display: block; width: 100%; height: auto;">
+          <p class="figure-note"><strong>End-to-end case of MEWM-Agent on a long video.</strong> Step 1 detects five candidates from the decomposed prediction error and rescans them to confirm three MEs and two MaEs. Step 2 shows the four-agent analysis of the first ME with memory reads and writes. Step 3 reports the final spotting intervals and AU-to-emotion chains for all three MEs.</p>
+        </figure>
+      </div>
+    </section>
+    <!-- End Case Study -->
+
+    <!-- Conclusion -->
+    <section class="section hero is-light">
+      <div class="container is-max-widescreen">
+        <h2 class="title is-3 has-text-centered" id="conclusion">Conclusion</h2>
+        <div class="columns is-centered">
+          <div class="column is-8 content has-text-justified">
+            <p>
+              We presented <strong>MEWM-Agent</strong>, a multi-agent interactive emotional world model for long-video micro-expression question answering (ME-LVQA). The State Representation Engine (SRE) encodes observations into AU-centered dual-timescale historical states, from which the Prediction and Rollout Engine (PRE) learns subject-specific facial dynamics and formulates event spotting as future event perception. Building on this foundation, the Agent Coordination Engine (ACE) organizes evidence-grounded reasoning along motion, AU, emotion, and counterfactual verification chains, sustained by a four-layer working, episodic, semantic, and global memory system with evidence token regulation. World Model Anchored Evidence-guided Policy Optimization (WAEPO) stabilizes policy optimization through On-Policy Distillation, student-only advantage baselines, and PRE-derived cascaded process rewards. Together, these components ground spotting, attribution, verification, and narration in a shared dynamic state space, enabling reproducible affective reasoning over long videos.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End Conclusion -->
+
+    <!-- Cite -->
+    <section class="section" id="cite">
+      <div class="container is-max-widescreen">
+        <h2 class="title is-3 has-text-centered">Cite</h2>
+        <div class="cite-box">
+          <div class="cite-header">
+            <span class="cite-title">BibTeX</span>
+            <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
+              <i class="fas fa-copy"></i>
+              <span class="copy-text">Copy</span>
+            </button>
+          </div>
+          <pre id="bibtex-code"><code>@article{chang2026mewmagent,
+  title={MEWM-Agent: A Multi-Agent Interactive Emotional World Model for Long-video Micro-expression Question Answering},
+  author={Chang, Haolin and Tian, Fuze and Jiang, Lei and Zhang, Lixin and Liu, Jingyu and Qian, Kun and Zhao, Qinglin and Hu, Bin and Schuller, Bj{\"o}rn W.},
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  year={2026},
+  url={https://github.com/Aurora-cc99/MEWM-Agent}
+}</code></pre>
+        </div>
+      </div>
+    </section>
+    <!-- End Cite -->
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank" rel="noopener noreferrer">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank" rel="noopener noreferrer">Nerfies</a> project page.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TOC Scroll Spy -->
+  <script>
+    (function () {
+      const links = document.querySelectorAll('.toc-link');
+      const sectionIds = Array.from(links).map(function (l) { return l.dataset.target; });
+      const sections = sectionIds.map(function (id) { return document.getElementById(id); }).filter(Boolean);
+
+      function onScroll() {
+        const scrollY = window.scrollY + window.innerHeight * 0.3;
+        let active = sections[0];
+        for (const sec of sections) {
+          if (sec.getBoundingClientRect().top + window.scrollY <= scrollY) {
+            active = sec;
+          }
+        }
+        links.forEach(function (l) {
+          l.classList.toggle('active', active && l.dataset.target === active.id);
+        });
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      links.forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.getElementById(link.dataset.target);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+    })();
+  </script>
+
+</body>
+
+</html>
